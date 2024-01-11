@@ -1,0 +1,27 @@
+---
+title: "RMarkdown Practice"
+author: "Jodie"
+date: "2024-01-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## History of Cats
+### This title is not a cat 
+#### Title title is also not a cat 
+
+This is a cat. (⋑•ㅅ•)⋑
+Cats meow when they get snacks. 
+
+```{r}
+#install.packages("tidyverse")
+library("tidyverse")
+```
+
+```{r}
+ggplot(mtcars, aes(x = factor(cyl))) +
+    geom_bar()
+```
