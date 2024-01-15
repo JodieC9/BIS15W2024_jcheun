@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output:
   html_document: 
     theme: spacelab
-    keep_md: yes
+    keep_md: true
 ---
 
 ## Instructions
@@ -14,13 +14,18 @@ Answer the following questions and complete the exercises in RMarkdown. Please e
 Make sure to use the formatting conventions of RMarkdown to make your report neat and clean!  
 
 **1. Please complete the [class survey](https://forms.gle/AHHXd3aobaAdkkFg9) if you have not already done so.**
-Survey completed!
+
+Survey completed!  
 
 **2. What is the difference between R and RStudio? What is GitHub and why is it useful to programmers?** 
-R itself is the program and scripting language used to perform coding and statistics. R studio is a graphical user interface (GUI) that contains graphical representations of the program functions provided in R. R Studio can not work independently of R since R is the actual program running the lines of code being entered. GitHub is an online area where various programmers can put,save, and collaborate on various coding projects. Through the Git program, GitHub will track changes made in the code and restore previous versions of coding projects. Personally, I can best understand the collboration aspect of GitHub by imagining it as the "Google Drive" for coding purposes. 
+ 
+  R itself is the program and scripting language used to perform coding and statistics. R studio is a graphical user interface (GUI) that contains graphical representations of the program functions provided in R. R Studio can not work independently of R since R is the actual program running the lines of code being entered.  
+  
+  GitHub is an online platform where various programmers can put,save, and collaborate on various coding projects. Through the Git program, GitHub will track changes made in the code and restore previous versions of coding projects. Personally, I can best understand the collaboration aspect of GitHub by imagining it as the "Google Drive" for coding purposes.   
 
 
 **3. Navigate to my [BIS15L](https://github.com/jmledford3115/BIS15LW2024_jledford) repository on GitHub. Notice that near the bottom there is a nice, clean description of the repository. You want this on your repository! It is built by making edits to the `README.md` file using the RMarkdown conventions. Edit your repository's `README.md` file so that you have a clean informative description, including your email address. Be creative! You don't need to just copy mine. There are lots of examples online.**  
+Completed. 
 
 **4. Calculate the following expressions. Be sure to include each one in a separate code chunk.**  
 ```{r}
