@@ -1,0 +1,519 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Objects, Classes \& NAs},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Objects, Classes \& NAs}
+\author{}
+\date{\vspace{-2.5em}2024-01-16}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\hypertarget{learning-goals}{%
+\subsection{Learning Goals}\label{learning-goals}}
+
+\emph{At the end of this exercise, you will be able to:}\\
+1. Define an object in R.\\
+2. Use objects to perform calculations.\\
+3. Explain the difference between data classes in R.\\
+4. Use R to identify the class of specific data.\\
+5. Define NA in R.\\
+6. Determine whether or not data have NA values.
+
+\hypertarget{objects}{%
+\subsection{Objects}\label{objects}}
+
+In order to access the potential of R we need to assign values or other
+types of data to \texttt{objects}. There is a specific format that I
+want you to follow, so please pay close attention.
+
+Assign a value to object `x'. The `\textless-' symbol is read as `gets'.
+In this case, x gets 42. Make sure that you are in the environment panel
+and you should see the value associated with `x'. On a mac, you can push
+\texttt{option} and \texttt{-} to automatically generate the gets
+symbol.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \DecValTok{42}
+\end{Highlighting}
+\end{Shaded}
+
+To print the object to the screen, just type x.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 42
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y}\OtherTok{\textless{}{-}} \DecValTok{30} 
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{z}\OtherTok{=}\DecValTok{30} \CommentTok{\#do not use equal sign for object assignments }
+\NormalTok{q }\OtherTok{\textless{}{-}} \DecValTok{42}
+\end{Highlighting}
+\end{Shaded}
+
+Once an object has been created, you can do things with them.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{treatment }\OtherTok{\textless{}{-}} \DecValTok{36}
+\NormalTok{control }\OtherTok{\textless{}{-}} \DecValTok{38}
+\end{Highlighting}
+\end{Shaded}
+
+Here we make a new object \texttt{my\_experiment} that is the sum of the
+treatment and control. Notice that I use \texttt{\_} and not spaces.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{my\_experiment }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(treatment, control)}
+\NormalTok{my\_experiment}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 74
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{treatment}\SpecialCharTok{+}\NormalTok{control}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 74
+\end{verbatim}
+
+\hypertarget{nomenclature}{%
+\subsection{Nomenclature}\label{nomenclature}}
+
+We need to be careful about nomenclature when we write code. R allows us
+to give almost any name we want to an object, but there are exceptions.
+For example, we don't want to give a name to an object that is the same
+as a function in R.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{else} \OtherTok{\textless{}{-}} \DecValTok{12}
+\end{Highlighting}
+\end{Shaded}
+
+We get an error here because \texttt{else} is a function in R. You also
+don't want to give names that might get confused with functions;
+i.e.~you can assign a value to `mean' but this could become confusing
+because mean is used as a function.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{2}\SpecialCharTok{+}\DecValTok{8}\SpecialCharTok{+}\DecValTok{2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 12
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\DecValTok{2}\SpecialCharTok{+}\DecValTok{8}\SpecialCharTok{+}\DecValTok{2}\NormalTok{)}\SpecialCharTok{/}\DecValTok{3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 4
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{mean}\NormalTok{(}\DecValTok{2}\SpecialCharTok{+}\DecValTok{8}\SpecialCharTok{+}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 12
+\end{verbatim}
+
+\hypertarget{practice}{%
+\subsection{Practice}\label{practice}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Create three new objects, \texttt{venom\_GT}, \texttt{chiron}, and
+  \texttt{veyron}. These are the fastest cars in the world. Assign each
+  car to its top speed. The venom\_GT can go 270, chiron is 261, and
+  veyron is 268.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mean }\OtherTok{\textless{}{-}} \DecValTok{20} \CommentTok{\#Test, do not use!}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{venom\_GT }\OtherTok{\textless{}{-}} \DecValTok{270}
+\NormalTok{chiron }\OtherTok{\textless{}{-}} \DecValTok{261}
+\NormalTok{veyron }\OtherTok{\textless{}{-}} \DecValTok{268} 
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Use arithmetic to calculate the mean top speed for the cars.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(venom\_GT}\SpecialCharTok{+}\NormalTok{chiron}\SpecialCharTok{+}\NormalTok{veyron)}\SpecialCharTok{/}\DecValTok{3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 266.3333
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Use the function \texttt{mean()} to calculate the mean top speed for
+  the cars.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{mean}\NormalTok{(venom\_GT}\SpecialCharTok{+}\NormalTok{chiron}\SpecialCharTok{+}\NormalTok{veyron)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 799
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cars }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(venom\_GT, chiron, veyron)}
+\FunctionTok{mean}\NormalTok{ (cars)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 266.3333
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{mean}\NormalTok{(}\FunctionTok{c}\NormalTok{(venom\_GT, chiron, veyron))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 266.3333
+\end{verbatim}
+
+\hypertarget{types-of-data}{%
+\subsection{Types of Data}\label{types-of-data}}
+
+There are five frequently used \texttt{classes} of data: 1. numeric, 2.
+integer, 3. character, 4. logical, 5. complex.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{my\_numeric }\OtherTok{\textless{}{-}} \DecValTok{42}
+\NormalTok{my\_integer }\OtherTok{\textless{}{-}}\NormalTok{ 2L }\CommentTok{\#adding an L automatically denotes an integer}
+\NormalTok{my\_character }\OtherTok{\textless{}{-}} \StringTok{"universe"}
+\NormalTok{my\_logical }\OtherTok{\textless{}{-}} \ConstantTok{FALSE}
+\NormalTok{my\_complex }\OtherTok{\textless{}{-}} \DecValTok{2}\SpecialCharTok{+}\NormalTok{4i}
+\end{Highlighting}
+\end{Shaded}
+
+To find out what type of data you are working with, use the
+\texttt{class()} function. This is important because sometimes we will
+need to change the type of data to perform certain analyses.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(my\_numeric)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "numeric"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{ (my\_integer)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "integer"
+\end{verbatim}
+
+You can use the \texttt{is()} and \texttt{as()} functions to clarify or
+specify a type of data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{is.integer}\NormalTok{(my\_numeric) }\CommentTok{\#is my\_numeric (the object) an integer?}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{my\_integer }\OtherTok{\textless{}{-}} 
+  \FunctionTok{as.integer}\NormalTok{(my\_numeric) }\CommentTok{\#create a new object specified as an integer}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{is.integer}\NormalTok{(my\_integer) }\CommentTok{\#is my\_numeric an integer?}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\hypertarget{missing-data}{%
+\subsection{Missing Data}\label{missing-data}}
+
+R has a special way to designate missing data, the NA. NA values in R
+have specific properties which are very useful if your data contains any
+missing values. Later this quarter we will have a session focused on
+dealing with NAs.
+
+NA values are used to designate missing data. \texttt{is.na} or
+\texttt{anyNA} are useful functions when dealing with NAs in data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{my\_missing }\OtherTok{\textless{}{-}} \ConstantTok{NA}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{is.na}\NormalTok{(my\_missing)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{anyNA}\NormalTok{(my\_missing)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\hypertarget{practice-1}{%
+\subsection{Practice}\label{practice-1}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Let's create a vector that includes some missing data (we will discuss
+  vectors more in part 2). For now, run the following code chunk.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{new\_vector }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{7}\NormalTok{, }\FloatTok{6.2}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{9}\NormalTok{, }\ConstantTok{NA}\NormalTok{, }\DecValTok{4}\NormalTok{, }\FloatTok{9.8}\NormalTok{, }\DecValTok{7}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  As we did in homework 1, calculate the mean of \texttt{new\_vector}.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{mean}\NormalTok{( new\_vector)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] NA
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  How do you interpret this result? What does this mean about NAs?
+\end{enumerate}
+
+RStudio is unable to calculate the mean of the data set if there is
+missing data.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Recalculate the mean using the following code chunk. Why is the
+  useful?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{mean}\NormalTok{(new\_vector, }\AttributeTok{na.rm=}\NormalTok{T) }\CommentTok{\#na.rm removes the NA values in the vector}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5.888889
+\end{verbatim}
+
+\hypertarget{thats-it-lets-take-a-break-and-then-move-on-to-part-2}{%
+\subsection{That's it! Let's take a break and then move on to part
+2!}\label{thats-it-lets-take-a-break-and-then-move-on-to-part-2}}
+
+--\textgreater{}\href{https://jmledford3115.github.io/datascibiol/}{Home}
+
+\end{document}
