@@ -1,7 +1,7 @@
 ---
 title: "Lab 2 Homework"
 author: "Jodie Cheun"
-date: "2024-01-16"
+date: "2024-01-18"
 output:
   html_document: 
     theme: spacelab
@@ -17,7 +17,7 @@ Make sure to use the formatting conventions of RMarkdown to make your report nea
   Vectors in RStudio are a type of data structure that contains a sequence of data elements that are the same type. The most frequent data types include numeric, character, integer, logical, and complex. Vectors can be created by using the "c" function.  
 
 2. What is a data matrix in R?  
-  Data matrices can be interpreted as several vectors stacked on top of each other. The contain several elements of the same data type (vectors) that get organized into a specified number of rows and columns, similar to a data table.  
+  Data matrices can be interpreted as several vectors stacked on top of each other. They contain several elements of the same data type (hence the use of vectors) that get organized into a specified number of rows and columns, similar to a data table.  
 
 3. Below are data collected by three scientists (Jill, Steve, Susan in order) measuring temperatures of eight hot springs. Run this code chunk to create the vectors.  
 
