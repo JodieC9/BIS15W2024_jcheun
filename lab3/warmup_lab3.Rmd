@@ -1,0 +1,59 @@
+---
+title: "lab3_practice"
+output: html_document
+date: "2024-01-18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### 1. Plant Height Vector 
+```{r}
+plant_height <- c(30.7, 37.6, 28.4, NA, 33.2)
+```
+
+### 2. Plant Weight Vector 
+```{r}
+plant_weight <- c( 4, 5.2, 3.7, NA, 4.6)
+```
+
+### 3. Labels for data matrix 
+```{r}
+samples <- c( "plant1", "plant2", "plant3", "plant4", "plant5")
+measured <- c ("height","weight")
+```
+
+###4. Combine data for height and weight 
+```{r}
+plant_experiment <- c(plant_height, plant_weight)
+```
+
+###5. Build the data matrix from the pieces 
+
+
+```{r}
+plant_experiment_matrix <- matrix(plant_experiment, nrow=5, byrow=F)
+plant_experiment_matrix
+```
+
+###6. Name the column and rows 
+```{r}
+colnames(plant_experiment_matrix) <- measured
+rownames(plant_experiment_matrix) <- samples
+plant_experiment_matrix
+```
+### 7. Calculate the means of each column 
+```{r}
+plant_means <- colMeans(plant_experiment_matrix, na.rm=T)
+plant_means 
+```
+
+Notice when the data set includes the NA values, R will not be able to caluclate the means. You have to take the means out first 
+
+### 8. Add this value as a new row in the data matrix 
+```{r}
+plant_experiment_matrix_final <- rbind(plant_experiment_matrix, plant_means)
+plant_experiment_matrix_final
+```
+
