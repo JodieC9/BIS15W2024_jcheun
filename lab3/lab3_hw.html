@@ -423,7 +423,7 @@ the data is <code>msleep</code>.</li>
 <ol start="2" style="list-style-type: decimal">
 <li>Store these data into a new data frame <code>sleep</code>.</li>
 </ol>
-<pre class="r"><code>sleep &lt;- data.frame (msleep)</code></pre>
+<pre class="r"><code>sleep &lt;- data.frame(msleep)</code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>What are the dimensions of this data frame (variables and
 observations)? How do you know? Please show the <em>code</em> that you
@@ -611,7 +611,7 @@ once.</p>
 <pre class="r"><code>any(is.na(sleep))</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <p>Using the “any” function gives back a simple T or F statement on
-whether or not we hav NA in our dataframe.</p>
+whether or not we have NA in our dataframe.</p>
 <pre class="r"><code>sum(is.na(sleep))</code></pre>
 <pre><code>## [1] 136</code></pre>
 <p>Even better, we can use the “sum” function to see the exact amount of
@@ -626,7 +626,7 @@ NA observations in our dataframe.</p>
 <ol start="6" style="list-style-type: decimal">
 <li>How many herbivores are represented in the data?</li>
 </ol>
-<pre class="r"><code>table (sleep$vore)</code></pre>
+<pre class="r"><code>table(sleep$vore)</code></pre>
 <pre><code>## 
 ##   carni   herbi insecti    omni 
 ##      19      32       5      20</code></pre>
@@ -653,7 +653,7 @@ greater than or equal to 200kg body weight. Make two new dataframes
 ##  $ awake       : num [1:83] 11.9 7 9.6 9.1 20 9.6 15.3 17 13.9 21 ...
 ##  $ brainwt     : num [1:83] NA 0.0155 NA 0.00029 0.423 NA NA NA 0.07 0.0982 ...
 ##  $ bodywt      : num [1:83] 50 0.48 1.35 0.019 600 ...</code></pre>
-<pre class="r"><code>small_mammal &lt;- filter(msleep, bodywt &lt;= 19)</code></pre>
+<pre class="r"><code>small_mammal &lt;- filter (msleep,bodywt &lt;= 19)</code></pre>
 <pre class="r"><code>small_mammal</code></pre>
 <pre><code>## # A tibble: 59 × 11
 ##    name   genus vore  order conservation sleep_total sleep_rem sleep_cycle awake
@@ -670,7 +670,7 @@ greater than or equal to 200kg body weight. Make two new dataframes
 ## 10 Chinc… Chin… herbi Rode… domesticated        12.5       1.5       0.117  11.5
 ## # ℹ 49 more rows
 ## # ℹ 2 more variables: brainwt &lt;dbl&gt;, bodywt &lt;dbl&gt;</code></pre>
-<pre class="r"><code>large_mammal &lt;- filter (msleep, bodywt &gt;= 200)</code></pre>
+<pre class="r"><code>large_mammal &lt;- filter(msleep,bodywt &gt;= 200)</code></pre>
 <pre class="r"><code>large_mammal</code></pre>
 <pre><code>## # A tibble: 7 × 11
 ##   name    genus vore  order conservation sleep_total sleep_rem sleep_cycle awake
@@ -709,7 +709,7 @@ longer on average?</li>
 ##  $ awake       : num [1:83] 11.9 7 9.6 9.1 20 9.6 15.3 17 13.9 21 ...
 ##  $ brainwt     : num [1:83] NA 0.0155 NA 0.00029 0.423 NA NA NA 0.07 0.0982 ...
 ##  $ bodywt      : num [1:83] 50 0.48 1.35 0.019 600 ...</code></pre>
-<pre class="r"><code>large_sleep_mean &lt;- mean(large_mammal$sleep_total)</code></pre>
+<pre class="r"><code>large_sleep_mean &lt;- mean (large_mammal$sleep_total)</code></pre>
 <pre class="r"><code>large_sleep_mean</code></pre>
 <pre><code>## [1] 3.3</code></pre>
 <pre class="r"><code>small_sleep_mean &lt;- mean(small_mammal$sleep_total)</code></pre>
@@ -748,7 +748,7 @@ than large mammals do.</p>
 <p>Using the summary function, we can find the maximum value recorded in
 the specific variable category we are looking at. In our case, we are
 interested in the maximum value in the sleep_total variable.</p>
-<pre class="r"><code>sleepiest &lt;- filter(sleep, sleep_total ==19.90)</code></pre>
+<pre class="r"><code>sleepiest &lt;- filter(sleep,sleep_total ==19.90)</code></pre>
 <pre class="r"><code>sleepiest</code></pre>
 <pre><code>##               name  genus    vore      order conservation sleep_total sleep_rem
 ## 1 Little brown bat Myotis insecti Chiroptera         &lt;NA&gt;        19.9         2

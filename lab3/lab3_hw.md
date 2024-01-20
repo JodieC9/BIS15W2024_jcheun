@@ -48,10 +48,11 @@ msleep
 msleep <- msleep
 ```
 
+
 2. Store these data into a new data frame `sleep`.  
 
 ```r
-sleep <- data.frame (msleep)
+sleep <- data.frame(msleep)
 ```
 
 3. What are the dimensions of this data frame (variables and observations)? How do you know? Please show the *code* that you used to determine this below.  
@@ -63,7 +64,8 @@ dim(sleep)
 ```
 ## [1] 83 11
 ```
-This output tells us we have 83 observations and 11 variables. 
+This output tells us we have 83 observations and 11 variables.
+
 
 4. Are there any NAs in the data? How did you determine this? Please show your code.  
 
@@ -241,7 +243,8 @@ is.na(sleep)
 ## [82,] FALSE   FALSE  FALSE
 ## [83,] FALSE   FALSE  FALSE
 ```
-While the is.na function will tell us if there are NAs in the data frame, this is not so helpful as it presents a lot of data to us at once. 
+While the is.na function will tell us if there are NAs in the data frame, this is not so helpful as it presents a lot of data to us at once.
+
 
 ```r
 any(is.na(sleep))
@@ -250,7 +253,7 @@ any(is.na(sleep))
 ```
 ## [1] TRUE
 ```
-Using the "any" function gives back a simple T or F statement on whether or not we hav NA in our dataframe. 
+Using the "any" function gives back a simple T or F statement on whether or not we have NA in our dataframe.
 
 
 ```r
@@ -260,8 +263,7 @@ sum(is.na(sleep))
 ```
 ## [1] 136
 ```
-Even better, we can use the "sum" function to see the exact amount of NA observations in our dataframe. 
-
+Even better, we can use the "sum" function to see the exact amount of NA observations in our dataframe.
 
 5. Show a list of the column names is this data frame.
 
@@ -278,7 +280,7 @@ names(sleep)
 6. How many herbivores are represented in the data?  
 
 ```r
-table (sleep$vore)
+table(sleep$vore)
 ```
 
 ```
@@ -286,7 +288,8 @@ table (sleep$vore)
 ##   carni   herbi insecti    omni 
 ##      19      32       5      20
 ```
-As shown, the msleep data set contains 32 herbivores. The table function will return a table using data from the "sleep" data frame made prior specifically in the "vore" variable, similar to a data category. 
+As shown, the msleep data set contains 32 herbivores. The table function will return a table using data from the "sleep" data frame made prior specifically in the "vore" variable, similar to a data category.
+
 
 7. We are interested in two groups; small and large mammals. Let's define small as less than or equal to 19kg body weight and large as greater than or equal to 200kg body weight. Make two new dataframes (large and small) based on these parameters.
 
@@ -309,10 +312,8 @@ str(msleep)
 ##  $ bodywt      : num [1:83] 50 0.48 1.35 0.019 600 ...
 ```
 
-
-
 ```r
-small_mammal <- filter(msleep, bodywt <= 19)
+small_mammal <- filter (msleep,bodywt <= 19)
 ```
 
 
@@ -339,9 +340,8 @@ small_mammal
 ```
 
 
-
 ```r
-large_mammal <- filter (msleep, bodywt >= 200)
+large_mammal <- filter(msleep,bodywt >= 200)
 ```
 
 
@@ -365,7 +365,6 @@ large_mammal
 
 8. What is the mean weight for both the small and large mammals?
 
-
 ```r
 large_mammal_mean <- mean(large_mammal$bodywt)
 ```
@@ -378,7 +377,6 @@ large_mammal_mean
 ```
 ## [1] 1747.071
 ```
-
 
 
 ```r
@@ -417,7 +415,7 @@ str(msleep)
 ```
 
 ```r
-large_sleep_mean <- mean(large_mammal$sleep_total)
+large_sleep_mean <- mean (large_mammal$sleep_total)
 ```
 
 
@@ -442,8 +440,7 @@ small_sleep_mean
 ```
 ## [1] 11.78644
 ```
-
-As shown above, small mammals on average will sleep for a longer time than large mammals do. 
+As shown above, small mammals on average will sleep for a longer time than large mammals do.
 
 10. Which animal is the sleepiest among the entire dataframe?
 
@@ -480,9 +477,8 @@ summary(sleep)
 ```
 Using the summary function, we can find the maximum value recorded in the specific variable category we are looking at. In our case, we are interested in the maximum value in the sleep_total variable.
 
-
 ```r
-sleepiest <- filter(sleep, sleep_total ==19.90)
+sleepiest <- filter(sleep,sleep_total ==19.90)
 ```
 
 
@@ -496,7 +492,7 @@ sleepiest
 ##   sleep_cycle awake brainwt bodywt
 ## 1         0.2   4.1 0.00025   0.01
 ```
-By filtering out the observations in the sleep_total variable that do not fit the criteria of the sleep_total being "really equal" to 19.90, the maximum sleep_total value identified with the summary function, we get the sleepiest mammal in the "sleep" dataframe. 
+By filtering out the observations in the sleep_total variable that do not fit the criteria of the sleep_total being "really equal" to 19.90, the maximum sleep_total value identified with the summary function, we get the sleepiest mammal in the "sleep" dataframe.
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences.   
