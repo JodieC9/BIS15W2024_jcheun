@@ -1,0 +1,148 @@
+---
+title: "Lab 3 Homework"
+author: "Jodie Cheun"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    theme: spacelab
+    keep_md: true
+---
+
+## Instructions
+Answer the following questions and complete the exercises in RMarkdown. Please embed all of your code and push your final work to your repository. Your final lab report should be organized, clean, and run free from errors. Remember, you must remove the `#` for the included code chunks to run. Be sure to add your name to the author header above.  
+
+Make sure to use the formatting conventions of RMarkdown to make your report neat and clean!  
+
+## Load the tidyverse
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+### Mammals Sleep  
+1. For this assignment, we are going to use built-in data on mammal sleep patterns. From which publication are these data taken from? Since the data are built-in you can use the help function in R. The name of the data is `msleep`.  
+```{r}
+msleep
+msleep <- msleep
+```
+
+2. Store these data into a new data frame `sleep`.  
+```{r}
+sleep <- data.frame (msleep)
+```
+
+3. What are the dimensions of this data frame (variables and observations)? How do you know? Please show the *code* that you used to determine this below.  
+```{r}
+dim(sleep)
+```
+This output tells us we have 83 observations and 11 variables. 
+
+4. Are there any NAs in the data? How did you determine this? Please show your code.  
+```{r}
+is.na(sleep)
+```
+While the is.na function will tell us if there are NAs in the data frame, this is not so helpful as it presents a lot of data to us at once. 
+```{r}
+any(is.na(sleep))
+```
+Using the "any" function gives back a simple T or F statement on whether or not we hav NA in our dataframe. 
+
+```{r}
+sum(is.na(sleep))
+```
+Even better, we can use the "sum" function to see the exact amount of NA observations in our dataframe. 
+
+
+5. Show a list of the column names is this data frame.
+```{r}
+names(sleep)
+```
+
+6. How many herbivores are represented in the data?  
+```{r}
+table (sleep$vore)
+```
+As shown, the msleep data set contains 32 herbivores. The table function will return a table using data from the "sleep" data frame made prior specifically in the "vore" variable, similar to a data category. 
+
+7. We are interested in two groups; small and large mammals. Let's define small as less than or equal to 19kg body weight and large as greater than or equal to 200kg body weight. Make two new dataframes (large and small) based on these parameters.
+```{r}
+str(msleep)
+```
+
+
+```{r}
+small_mammal <- filter(msleep, bodywt <= 19)
+```
+
+```{r}
+small_mammal
+```
+
+
+```{r}
+large_mammal <- filter (msleep, bodywt >= 200)
+```
+
+```{r}
+large_mammal
+```
+
+8. What is the mean weight for both the small and large mammals?
+
+```{r}
+large_mammal_mean <- mean(large_mammal$bodywt)
+```
+
+```{r}
+large_mammal_mean
+```
+
+
+```{r}
+small_mammal_mean <- mean(small_mammal$bodywt)
+```
+
+```{r}
+small_mammal_mean
+```
+
+9. Using a similar approach as above, do large or small animals sleep longer on average?  
+
+```{r}
+str(msleep)
+```
+```{r}
+large_sleep_mean <- mean(large_mammal$sleep_total)
+```
+
+```{r}
+large_sleep_mean
+```
+
+```{r}
+small_sleep_mean <- mean(small_mammal$sleep_total)
+```
+
+```{r}
+small_sleep_mean
+```
+
+As shown above, small mammals on average will sleep for a longer time than large mammals do. 
+
+10. Which animal is the sleepiest among the entire dataframe?
+
+```{r}
+summary(sleep)
+```
+Using the summary function, we can find the maximum value recorded in the specific variable category we are looking at. In our case, we are interested in the maximum value in the sleep_total variable.
+
+```{r}
+sleepiest <- filter(sleep, sleep_total ==19.90)
+```
+
+```{r}
+sleepiest
+```
+By filtering out the observations in the sleep_total variable that do not fit the criteria of the sleep_total being "really equal" to 19.90, the maximum sleep_total value identified with the summary function, we get the sleepiest mammal in the "sleep" dataframe. 
+
+## Push your final code to GitHub!
+Please be sure that you check the `keep md` file in the knit preferences.   
