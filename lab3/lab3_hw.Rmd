@@ -140,7 +140,7 @@ sleepiest <- filter(sleep,sleep_total ==19.90)
 ```{r}
 sleepiest
 ```
-By filtering out the observations in the sleep_total variable that do not fit the criteria of the sleep_total being "really equal" to 19.90, the maximum sleep_total value identified with the summary function, we get the sleepiest mammal in the "sleep" dataframe.
+By filtering out the observations in the sleep_total variable that do not fit the criteria of the sleep_total being "really equal" to 19.90, the maximum sleep_total value identified with the summary function, we get the sleepiest mammal in the "sleep" dataframe as the Little Brown Bat.
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences.   
