@@ -1,11 +1,11 @@
 ---
 title: "Lab 4 Homework"
-author: "Please Add Your Name Here"
+author: "Jodie Cheun"
 date: "`r Sys.Date()`"
 output:
   html_document: 
     theme: spacelab
-    keep_md: yes
+    keep_md: true
 ---
 ## Jan 23 Prof NOTE: Only work on questions 1 through 6 for Lab4HW submission 
 
@@ -32,39 +32,94 @@ Data: http://datadryad.org/resource/doi:10.5061/dryad.q5j65/1
 
 **1. Load the data into a new object called `homerange`.**
 ```{r}
-homerange <- read_csv("data/Tamburelloetal_HomeRangeDatabase.csv")
+homerange <- read.csv("data/Tamburelloetal_HomeRangeDatabase.csv")
 ```
 
 **2. Explore the data. Show the dimensions, column names, classes for each variable, and a statistical summary. Keep these as separate code chunks.**  
 ```{r}
 dim(homerange)
 ```
+
 ```{r}
 names(homerange)
 ```
 ```{r}
 glimpse(homerange)
 ```
+```{r}
+summary(homerange)
+```
+
 
 **3. Change the class of the variables `taxon` and `order` to factors and display their levels.**  
 ```{r}
+class(homerange$taxon)
+```
+```{r}
+levels (homerange$scientist)
+```
+For the `taxon` variable, we are not able to get the levels (aka details) because these data do not exist as factors. Let's change these data to factors so we can use the levels command
 
+```{r}
+homerange$taxon <- as.factor(homerange$taxon)
+```
+
+```{r}
+levels(homerange$taxon)
+```
+
+
+```{r}
+class(homerange$order)
+```
+
+```{r}
+homerange$order <- as.factor(homerange$order)
+```
+In this line of code, we are changing the order variable form a character to a factor. Changing to factor allows us to find the levels of information within the variable. 
+
+```{r}
+levels(homerange$order)
 ```
 
 **4. What taxa are represented in the `homerange` data frame? Make a new data frame `taxa` that is restricted to taxon, common name, class, order, family, genus, species.**  
 ```{r}
-
+homerange$taxon <- as.factor(homerange$taxon)
 ```
+
+```{r}
+levels(homerange$taxon)
+```
+
+
+```{r}
+taxa <- rename(homerange, common_name="common.name")
+```
+
+```{r}
+new_taxa<- select(taxa, "taxon", "common_name","class", "order", "family", "genus", "species")
+```
+Please note, I have renamed "common.name" to "common_name" variable to better reflect tidyverse format. The `new_taxa` dataframe is the `taxa` dataframe we are requested to make in question 4 that contains the specific variables. 
+
+```{r}
+new_taxa
+```
+
 
 **5. The variable `taxon` identifies the common name groups of the species represented in `homerange`. Make a table the shows the counts for each of these `taxon`.**  
 ```{r}
-
+table(new_taxa$taxon)
 ```
+Using the table command, we can make a table listing the taxon varaibles and the number of observationsin each. 
 
 **6. The species in `homerange` are also classified into trophic guilds. How many species are represented in each trophic guild.**  
 ```{r}
-
+summary(homerange)
 ```
+```{r}
+table(homerange$trophic.guild)
+```
+Using the table function, we can make a subset of the total data demonstrated in the `homerange` dataframe to only include the elements from the `trophic.guild` variable. Here, we can see the `trophic.guild` has 2 specifications, carnivore and herbivore with the number of observations in each shown. 
 
 **7. Make two new data frames, one which is restricted to carnivores and another that is restricted to herbivores.**  
 ```{r}
