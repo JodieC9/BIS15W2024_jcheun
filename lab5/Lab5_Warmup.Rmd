@@ -1,0 +1,62 @@
+---
+title: "Lab5Warmup"
+output: 
+  html_document: 
+    keep_md: yes
+date: "2024-01-25"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+##1. Load the data
+
+```{r}
+getwd()
+```
+
+
+```{r}
+library(tidyverse)
+```
+```{r}
+fish <- read_csv("data/Gaeta_etal_CLC_data.csv")
+```
+##2. Transform the data to only include lakeid and length 
+```{r}
+names(fish)
+```
+
+```{r}
+fishlength <- select(fish, "length", "lakeid")
+```
+When you run this command, you made a NEW dataframe. Data.frame command is only used when you have raw data, here we have the csv file already aka already have the dataframe dont need to make a new one. 
+
+##3. Filter the fish for lake BO 
+```{r}
+glimpse(fish)
+```
+Find out the class of the lakeid data. Note this is a chr in the dataset. 
+```{r}
+filter(fish, lakeid=="BO")
+```
+This commands filers the dataset to only include lake id results that really equal the BO requirment 
+
+##4. Mean length of BO fish 
+```{r}
+fish_BO <- filter(fish, lakeid=="BO")
+```
+
+Here, we make a NEW dataframe that only includes the BO fish since these are the only guys we are intersted in 
+
+```{r}
+mean(fish_BO$length)
+```
+
+Alt method, you could put the filter(fish, lakeid=="BO") into the mean() command, but this is combining steps which may make youre data harder to interpret. 

@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output:
   html_document: 
     theme: spacelab
-    keep_md: true
+    keep_md: yes
 ---
 ## Jan 23 Prof NOTE: Only work on questions 1 through 6 for Lab4HW submission 
 
@@ -21,6 +21,7 @@ Make sure to use the formatting conventions of RMarkdown to make your report nea
 ## Load the tidyverse
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
+library(janitor)
 ```
 
 ## Data
@@ -33,6 +34,7 @@ Data: http://datadryad.org/resource/doi:10.5061/dryad.q5j65/1
 **1. Load the data into a new object called `homerange`.**
 ```{r}
 homerange <- read.csv("data/Tamburelloetal_HomeRangeDatabase.csv")
+homerange <- clean_names(homerange)
 ```
 
 **2. Explore the data. Show the dimensions, column names, classes for each variable, and a statistical summary. Keep these as separate code chunks.**  
@@ -93,22 +95,18 @@ levels(homerange$taxon)
 
 
 ```{r}
-taxa <- rename(homerange, common_name="common.name")
-```
-
-```{r}
-new_taxa<- select(taxa, "taxon", "common_name","class", "order", "family", "genus", "species")
+taxa<- select(taxa, "taxon", "common_name","class", "order", "family", "genus", "species")
 ```
 Please note, I have renamed "common.name" to "common_name" variable to better reflect tidyverse format. The `new_taxa` dataframe is the `taxa` dataframe we are requested to make in question 4 that contains the specific variables. 
 
 ```{r}
-new_taxa
+taxa
 ```
 
 
 **5. The variable `taxon` identifies the common name groups of the species represented in `homerange`. Make a table the shows the counts for each of these `taxon`.**  
 ```{r}
-table(new_taxa$taxon)
+table(taxa$taxon)
 ```
 Using the table command, we can make a table listing the taxon varaibles and the number of observations in each. 
 
@@ -117,28 +115,52 @@ Using the table command, we can make a table listing the taxon varaibles and the
 summary(homerange)
 ```
 ```{r}
-table(homerange$trophic.guild)
+table(homerange$trophic_guild)
 ```
 Using the table function, we can make a subset of the total data demonstrated in the `homerange` dataframe to only include the elements from the `trophic.guild` variable. Here, we can see the `trophic.guild` has 2 specifications, carnivore and herbivore with the number of observations in each shown. 
 
 **7. Make two new data frames, one which is restricted to carnivores and another that is restricted to herbivores.**  
 ```{r}
-
+homerange_herbivore <- filter (homerange, trophic_guild == "herbivore")
+homerange_herbivore
 ```
+
+```{r}
+homerange_carnivore <- filter(homerange, trophic_guild == "carnivore")
+homerange_carnivore
+```
+
 
 **8. Do herbivores or carnivores have, on average, a larger `mean.hra.m2`? Remove any NAs from the data.**  
 ```{r}
-
+homerange_herbivore_avg_hra <- mean(homerange_herbivore$mean_hra_m2, na.rm = T)
+homerange_herbivore_avg_hra
 ```
 
 ```{r}
-
+homerange_carnivore_avg_hra <- mean(homerange_carnivore$mean_hra_m2, na.rm = T)
+homerange_carnivore_avg_hra
 ```
+
+As shown above, the herbivores have a larger mean.hra.m2 value 
 
 **9. Make a new dataframe `owls` that is limited to the mean mass, log10 mass, family, genus, and species of owls in the database. Which is the smallest owl? What is its common name? Do a little bit of searching online to see what you can learn about this species and provide a link below** 
-```{r}
 
+```{r}
+summary(mammals)
 ```
+
+```{r}
+summary(homerange)
+```
+
+
+```{r}
+owls <- select(homerange, "mass","family", "genus","species","order")
+owls
+```
+
+
 
 **10. As measured by the data, which bird species has the largest homerange? Show all of your work, please. Look this species up online and tell me about it!**.  
 ```{r}
