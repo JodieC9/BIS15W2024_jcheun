@@ -1,7 +1,7 @@
 ---
 title: "Lab 4 Homework"
 author: "Jodie Cheun"
-date: "2024-01-23"
+date: "2024-01-24"
 output:
   html_document: 
     theme: spacelab
@@ -1999,7 +1999,7 @@ table(new_taxa$taxon)
 ##  river fishes        snakes     tortoises       turtles 
 ##            14            41            12            14
 ```
-Using the table command, we can make a table listing the taxon varaibles and the number of observationsin each. 
+Using the table command, we can make a table listing the taxon varaibles and the number of observations in each. 
 
 **6. The species in `homerange` are also classified into trophic guilds. How many species are represented in each trophic guild.**  
 
