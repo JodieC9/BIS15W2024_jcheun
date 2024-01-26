@@ -5,10 +5,8 @@ date: "`r Sys.Date()`"
 output:
   html_document: 
     theme: spacelab
-    keep_md: yes
+    keep_md: true
 ---
-## Jan 23 Prof NOTE: Only work on questions 1 through 6 for Lab4HW submission 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -20,8 +18,8 @@ Make sure to use the formatting conventions of RMarkdown to make your report nea
 
 ## Load the tidyverse
 ```{r message=FALSE, warning=FALSE}
-library(tidyverse)
-library(janitor)
+library(tidyverse)##
+library(janitor)##
 ```
 
 ## Data
@@ -95,15 +93,9 @@ levels(homerange$taxon)
 
 
 ```{r}
-taxa<- select(taxa, "taxon", "common_name","class", "order", "family", "genus", "species")
-```
-Please note, I have renamed "common.name" to "common_name" variable to better reflect tidyverse format. The `new_taxa` dataframe is the `taxa` dataframe we are requested to make in question 4 that contains the specific variables. 
-
-```{r}
+taxa<- select (homerange,"taxon", "common_name","class", "order", "family", "genus", "species")
 taxa
 ```
-
-
 **5. The variable `taxon` identifies the common name groups of the species represented in `homerange`. Make a table the shows the counts for each of these `taxon`.**  
 ```{r}
 table(taxa$taxon)
@@ -147,25 +139,30 @@ As shown above, the herbivores have a larger mean.hra.m2 value
 **9. Make a new dataframe `owls` that is limited to the mean mass, log10 mass, family, genus, and species of owls in the database. Which is the smallest owl? What is its common name? Do a little bit of searching online to see what you can learn about this species and provide a link below** 
 
 ```{r}
-summary(mammals)
-```
-
-```{r}
 summary(homerange)
 ```
 
-
 ```{r}
-owls <- select(homerange, "mass","family", "genus","species","order")
-owls
+owls <- select(homerange, mean_mass_g, log10_mass, family, genus, species,order,)
+owls %>% 
+  filter(order=="strigiformes") %>% 
+  arrange(mean_mass_g) %>% 
+  arrange(log10_mass)
 ```
-
-
+Pipe command is used since there are several commands that use the results of the prior command. As shown above, the smallest owl in both mean_mass_g and log10_mass is the Glaucidium passerinum with a common name is the Eurasian pygmy owl. As suggested by the data, the Eurasian pygmy owl is the smallest own in Europe! They often hunt voles and mice but are also known to hunt larger prey such as gophers and squirrels. Interestingly, these owls they have mating calls much higher pitched then the regular owl "hoot". Link for more information: [More about Eurasian pygmy owls](https://bilderreich.de/1157/fact-sheet-eurasian-pygmy-owl-glaucidium-passerinum.html)
 
 **10. As measured by the data, which bird species has the largest homerange? Show all of your work, please. Look this species up online and tell me about it!**.  
 ```{r}
-
+largest_homerange <- select(homerange, mean_hra_m2, species, common_name, class)
 ```
+
+```{r}
+largest_homerange %>% 
+  arrange(desc(mean_hra_m2)) %>%
+  filter(class=="aves")
+```
+
+Using the pipeline command, we create a new dataframe that only includes homerange information (both mean and log10 recorded values), species, common name, and class. The class variable is critical to include as it ensures the elements in our dataframe only presents information about birds ( in the "aves" class). Now using the desc command, we can organize our homerange data to be from largest to smallest values. Revealing that the caracara has the largest homerange value. The Caracara species are a type of falcon that have a wingspan of 4 feet and can fly an impressive 40 miles per hour. They are the only falcons that create nests for their eggs and are excel in solving puzzles. 
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences.   
