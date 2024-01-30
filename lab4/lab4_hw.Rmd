@@ -52,13 +52,7 @@ summary(homerange)
 
 
 **3. Change the class of the variables `taxon` and `order` to factors and display their levels.**  
-```{r}
-class(homerange$taxon)
-```
-```{r}
-levels (homerange$scientist)
-```
-For the `taxon` variable, we are not able to get the levels (aka details) because these data do not exist as factors. Let's change these data to factors so we can use the levels command
+`Taxon` and `order` originally exist as characters in the data. In order to display their levels, we must change these data to factors. 
 
 ```{r}
 homerange$taxon <- as.factor(homerange$taxon)
@@ -68,15 +62,9 @@ homerange$taxon <- as.factor(homerange$taxon)
 levels(homerange$taxon)
 ```
 
-
-```{r}
-class(homerange$order)
-```
-
 ```{r}
 homerange$order <- as.factor(homerange$order)
 ```
-In this line of code, we are changing the order variable form a character to a factor. Changing to factor allows us to find the levels of information within the variable. 
 
 ```{r}
 levels(homerange$order)
