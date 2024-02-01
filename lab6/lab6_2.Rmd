@@ -4,9 +4,9 @@ date: "`r Sys.Date()`"
 output:
   html_document: 
     theme: spacelab
-    toc: yes
-    toc_float: yes
-    keep_md: yes
+    toc: true
+    toc_float: true
+    keep_md: true
 ---
 
 ## Learning Goals  
@@ -34,11 +34,15 @@ superhero_powers <- read_csv("data/super_hero_powers.csv", na = c("", "-99", "-"
 In the read call, we specify the values we want R to interpret as NA. Do not add this function to your read calls until you really understand the data 
 ## Data tidy
 1. Some of the names used in the `superhero_info` data are problematic so you should rename them here. Before you do anything, first have a look at the names of the variables. You can use `rename()` or `clean_names()`.    
+```{r}
+superhero_info <- clean_names(superhero_info)
+superhero_info
+```
 
 ## `tabyl`
 The `janitor` package has many awesome functions that we will explore. Here is its version of `table` which not only produces counts but also percentages. Very handy! Let's use it to explore the proportion of good guys and bad guys in the `superhero_info` data.  
 ```{r}
-tabyl(superhero_info, Alignment)
+tabyl(superhero_info, alignment)
 ```
 
 1. Who are the publishers of the superheros? Show the proportion of superheros from each publisher. Which publisher has the highest number of superheros?  
@@ -52,16 +56,18 @@ summary(superhero_powers)
 
 ```{r}
 superhero_info %>% 
-  tabyl(Publisher) %>% 
-  arrange(desc(Publisher))
+  tabyl(publisher) %>% 
+  arrange(desc(percent))
 ```
+With a combination of `tabyl` and `desc` to specify the data we want from the dataframe, we observe that Marvel Comics publisher has the highest percentage of superheros (n-value). 
 
 2. Notice that we have some neutral superheros! Who are they? List their names below.  
 ```{r}
 superhero_info %>% 
-  select(name, Alignment) %>% ##dont put dataframe name again when piping 
-  filter(Alignment=="neutral")
+  select(name, alignment) %>% 
+  filter(alignment=="neutral")
 ```
+Notice that because we specify the dataframe used in the first line, we do no thave to include it with the `select` command in the piping steps afterwards. 
 
 ## `superhero_info`
 3. Let's say we are only interested in the variables name, alignment, and "race". How would you isolate these variables from `superhero_info`?
@@ -69,35 +75,145 @@ superhero_info %>%
 names(superhero_info)
 ```
 
+```{r}
+superhero_info %>% 
+  select(name,alignment,race)
+```
+
 ## Not Human
 4. List all of the superheros that are not human.
+```{r}
+superhero_info %>% 
+  filter(race != "Human")
+```
+Please note that only superheros with `Human` listed in the `race` column were considered `Human` for this analysis. As such, human hybride superheros were considered `Not Human`
 
 ## Good and Evil
 5. Let's make two different data frames, one focused on the "good guys" and another focused on the "bad guys".
+```{r}
+good_guys <- (superhero_info) %>% 
+  select(name, alignment, race) %>% 
+  filter(alignment== "good")
+good_guys
+```
+
+```{r}
+bad_guys <- (superhero_info) %>% 
+  select(name, alignment, race) %>% 
+  filter(alignment== "bad")
+bad_guys
+```
 
 6. For the good guys, use the `tabyl` function to summarize their "race".
+```{r}
+good_guys <- (superhero_info) %>% 
+  select(name, alignment, race) %>% 
+  filter(alignment== "good") %>% 
+  tabyl(race) %>% 
+  arrange(desc(percent))
+good_guys
+```
 
 7. Among the good guys, Who are the Vampires?
+```{r}
+good_guys_vampire <- select(superhero_info, name, alignment,race) %>% 
+  filter(alignment== "good") %>% 
+  filter(race=="Vampire")
+
+good_guys_vampire
+```
+As shown, Angel and Blade are the only Vampires with a `good` alignment.
 
 8. Among the bad guys, who are the male humans over 200 inches in height?
+```{r}
+tall_bad_guys <- select(superhero_info, name, gender,alignment, height, race) %>% 
+  filter(alignment == "bad") %>% 
+  filter(gender== "Male") %>% 
+  filter(race=="Human") %>% 
+  filter(height> 200)
+
+tall_bad_guys
+```
+As shown, we have 5 bad guys with a height over 200 (no units provided)
 
 9. Are there more good guys or bad guys with green hair?  
+```{r}
+superhero_hair_colors <- select(superhero_info, name, alignment, hair_color) %>% 
+  filter(hair_color=="Green")
+superhero_hair_colors
+```
+By making a new dataframe specifically containing only the variables name, alignment, and hair color we can drastically reduce the observations to analyze. Further reduction is done by filtering observations in the `hair_color` column to only include superheros with `Green`. From this, we can conclude there are more good guys with green hair. 
 
 10. Let's explore who the really small superheros are. In the `superhero_info` data, which have a weight less than 50? Be sure to sort your results by weight lowest to highest.  
+```{r}
+small_superheros <- select(superhero_info, name, alignment, weight) %>% 
+  filter(weight <50) %>% 
+  arrange(weight)
+small_superheros
+```
+As shown, Iron Monger is the smallest superhero with a weight of 2 (no units specified), and they are a bad guy! 
 
 11. Let's make a new variable that is the ratio of height to weight. Call this variable `height_weight_ratio`.    
+```{r}
+small_superheros <- select(superhero_info, name, alignment, height,weight) %>% 
+  filter(weight <50) %>% 
+  arrange(weight) %>% 
+  mutate(height_weight_ratio=height/weight)
+small_superheros
+```
+
+Using the mutate function, we can add a new column to our dataframe using already existing data. We can recall that ratios are simply a division problem between 2 values. In our case, we wish to find the height to weight ratio, as such, we would want to divide height by weight to obtain this ratio in a new column (to our pre-existing dataframe) termed `height_weight_ratio`.
 
 12. Who has the highest height to weight ratio?  
+```{r}
+small_superheros <- select(superhero_info, name, alignment, height,weight) %>% 
+  filter(weight <50) %>% 
+  arrange(weight) %>% 
+  mutate(height_weight_ratio=height/weight) %>% 
+  arrange(desc(height_weight_ratio))
+small_superheros
+```
+As shown, Groot (a personal favorite of mine) has the largest height to weight ratio. 
 
 ## `superhero_powers`
 Have a quick look at the `superhero_powers` data frame.  
+```{r}
+glimpse(superhero_powers)
+```
 
 13. How many superheros have a combination of agility, stealth, super_strength, stamina?
+```{r}
+superhero_powers <- clean_names(superhero_powers)
+```
+
+```{r}
+fancy_superheros <- select(superhero_powers, hero_names,agility,stealth,super_strength,stamina) %>% 
+  filter(agility==TRUE) %>% 
+  filter(stealth==TRUE) %>% 
+  filter(super_strength==TRUE) %>% 
+  filter(stamina==TRUE)
+fancy_superheros
+```
+```{r}
+count(fancy_superheros)
+```
+Under the specifications, we have 40 superheros with those powers. 
 
 ## Your Favorite
 14. Pick your favorite superhero and let's see their powers!  
+```{r}
+superhero_powers %>% 
+  filter(hero_names=="Iron Man") %>% 
+  select_if(all)
+```
+The superpowers Iron Man possesses are shown above.  
 
-15. Can you find your hero in the superhero_info data? Show their info!  
+15. Can you find your hero in the superhero_info data? Show their info! 
+```{r}
+superhero_info %>% 
+  filter(name=="Iron Man")
+```
+All data about Iron Man in the superhero_info is shown above.
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences.  
