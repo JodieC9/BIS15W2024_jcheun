@@ -214,6 +214,17 @@ msleep %>%
 ```
 
 3. Try running the code again, but this time add `na.rm=TRUE`. What is the problem with Cetacea? Compare this to Carnivora. 
+```{r}
+msleep %>% 
+  group_by(order) %>% 
+  summarise(mean_brain_wt=mean(brainwt,na.rm = T))
+```
+```{r}
+msleep %>% 
+  filter(order=="cetacea") %>% 
+  select(order, genus,brainwt)
+```
+
 
 ## That's it! Let's take a break and then move on to part 2! 
 

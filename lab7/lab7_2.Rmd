@@ -196,8 +196,15 @@ penguins %>%
 ## Practice
 1. Produce separate summaries of the mean and standard deviation for bill_length_mm, bill_depth_mm, and flipper_length_mm for each penguin species. Be sure to provide the number of samples.  
 ```{r}
-
+penguins %>% 
+   summarize(bill_length_mm_mean = mean(bill_length_mm,na.rm = T),
+             bill_depth_mm= mean(bill_length_mm, na.rm = T),
+             flipper_length_mm = mean(flipper_length_mm,na.rm = T),
+             n())
+             
+  
 ```
+
 
 ## Wrap-up  
 

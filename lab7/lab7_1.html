@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2024-02-01" />
+<meta name="date" content="2024-02-03" />
 
 <title>summarize() and group_by()</title>
 
@@ -1504,7 +1504,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore"><code>summarize()</code> and
 <code>group_by()</code></h1>
-<h4 class="date">2024-02-01</h4>
+<h4 class="date">2024-02-03</h4>
 
 </div>
 
@@ -2111,6 +2111,36 @@ summarize function?</li>
 <code>na.rm=TRUE</code>. What is the problem with Cetacea? Compare this
 to Carnivora.</li>
 </ol>
+<pre class="r"><code>msleep %&gt;% 
+  group_by(order) %&gt;% 
+  summarise(mean_brain_wt=mean(brainwt,na.rm = T))</code></pre>
+<pre><code>## # A tibble: 19 × 2
+##    order           mean_brain_wt
+##    &lt;chr&gt;                   &lt;dbl&gt;
+##  1 Afrosoricida         0.0026  
+##  2 Artiodactyla         0.198   
+##  3 Carnivora            0.0986  
+##  4 Cetacea            NaN       
+##  5 Chiroptera           0.000275
+##  6 Cingulata            0.0459  
+##  7 Didelphimorphia      0.0063  
+##  8 Diprotodontia        0.0114  
+##  9 Erinaceomorpha       0.00295 
+## 10 Hyracoidea           0.0152  
+## 11 Lagomorpha           0.0121  
+## 12 Monotremata          0.025   
+## 13 Perissodactyla       0.414   
+## 14 Pilosa             NaN       
+## 15 Primates             0.254   
+## 16 Proboscidea          5.16    
+## 17 Rodentia             0.00357 
+## 18 Scandentia           0.0025  
+## 19 Soricomorpha         0.000592</code></pre>
+<pre class="r"><code>msleep %&gt;% 
+  filter(order==&quot;cetacea&quot;) %&gt;% 
+  select(order, genus,brainwt)</code></pre>
+<pre><code>## # A tibble: 0 × 3
+## # ℹ 3 variables: order &lt;chr&gt;, genus &lt;chr&gt;, brainwt &lt;dbl&gt;</code></pre>
 </div>
 <div id="thats-it-lets-take-a-break-and-then-move-on-to-part-2" class="section level2">
 <h2>That’s it! Let’s take a break and then move on to part 2!</h2>

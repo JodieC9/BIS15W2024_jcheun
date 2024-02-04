@@ -1,6 +1,6 @@
 ---
 title: "`summarize()` and `group_by()`"
-date: "2024-02-01"
+date: "2024-02-03"
 output:
   html_document: 
     theme: spacelab
@@ -584,6 +584,49 @@ msleep %>%
 ```
 
 3. Try running the code again, but this time add `na.rm=TRUE`. What is the problem with Cetacea? Compare this to Carnivora. 
+
+```r
+msleep %>% 
+  group_by(order) %>% 
+  summarise(mean_brain_wt=mean(brainwt,na.rm = T))
+```
+
+```
+## # A tibble: 19 × 2
+##    order           mean_brain_wt
+##    <chr>                   <dbl>
+##  1 Afrosoricida         0.0026  
+##  2 Artiodactyla         0.198   
+##  3 Carnivora            0.0986  
+##  4 Cetacea            NaN       
+##  5 Chiroptera           0.000275
+##  6 Cingulata            0.0459  
+##  7 Didelphimorphia      0.0063  
+##  8 Diprotodontia        0.0114  
+##  9 Erinaceomorpha       0.00295 
+## 10 Hyracoidea           0.0152  
+## 11 Lagomorpha           0.0121  
+## 12 Monotremata          0.025   
+## 13 Perissodactyla       0.414   
+## 14 Pilosa             NaN       
+## 15 Primates             0.254   
+## 16 Proboscidea          5.16    
+## 17 Rodentia             0.00357 
+## 18 Scandentia           0.0025  
+## 19 Soricomorpha         0.000592
+```
+
+```r
+msleep %>% 
+  filter(order=="cetacea") %>% 
+  select(order, genus,brainwt)
+```
+
+```
+## # A tibble: 0 × 3
+## # ℹ 3 variables: order <chr>, genus <chr>, brainwt <dbl>
+```
+
 
 ## That's it! Let's take a break and then move on to part 2! 
 
