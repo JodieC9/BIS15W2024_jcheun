@@ -1,11 +1,11 @@
 ---
 title: "Lab 7 Homework"
-author: "Your Name Here"
+author: "Jodie Cheun"
 date: "`r Sys.Date()`"
 output:
   html_document: 
     theme: spacelab
-    keep_md: yes
+    keep_md: true
 ---
 
 ```{r setup, include=FALSE}
@@ -32,70 +32,150 @@ fisheries <- readr::read_csv(file = "data/FAO_1950to2012_111914.csv")
 ```
 
 1. Do an exploratory analysis of the data (your choice). What are the names of the variables, what are the dimensions, are there any NA's, what are the classes of the variables?  
-```{r}
 
+```{r}
+names(fisheries)
 ```
+
+```{r}
+summary(fisheries)
+```
+
+```{r}
+dim(fisheries)
+```
+The fisheries data set has 17692 rows and 71 columns. 
+
+```{r}
+is.na(fisheries)
+```
+
+```{r}
+sum(is.na(fisheries))
+```
+
+Using the sum command in conjunction with the `is.na` command, we can get the precise amount of NAs present in the `fisheries` data rather than a bunch of T and F statements, which may not be so helpful. 
+
+```{r}
+class(fisheries)
+```
+
+```{r}
+is.integer(fisheries)
+```
+We have tabular data and no integer data. 
 
 2. Use `janitor` to rename the columns and make them easier to use. As part of this cleaning step, change `country`, `isscaap_group_number`, `asfis_species_number`, and `fao_major_fishing_area` to data class factor. 
 ```{r}
-
+fisheries <- clean_names(fisheries)
 ```
+
+```{r}
+fisheries$country <- as.factor(fisheries$country)
+fisheries$isscaap_group_number <- as.factor(fisheries$isscaap_group_number)
+fisheries$asfis_species_number <- as.factor(fisheries$asfis_species_number)
+fisheries$fao_major_fishing_area <- as.factor(fisheries$fao_major_fishing_area)
+```
+
+To check our data did get changed to factors, we can test run the use of `levels`: 
+```{r}
+levels(fisheries$country)
+```
+
 
 We need to deal with the years because they are being treated as characters and start with an X. We also have the problem that the column names that are years actually represent data. We haven't discussed tidy data yet, so here is some help. You should run this ugly chunk to transform the data for the rest of the homework. It will only work if you have used janitor to rename the variables in question 2!  
 
 Remove all the # in front of this code so it can run. Make sure you run this!! 
 
 ```{r}
-#fisheries_tidy <- fisheries %>% 
-#  pivot_longer(-c(country,common_name,isscaap_group_number,isscaap_taxonomic_group,asfi#s_species_number,asfis_species_name,fao_major_fishing_area,measure),
-#               names_to = "year",
-#               values_to = "catch",
-#               values_drop_na = TRUE) %>% 
-#  mutate(year= as.numeric(str_replace(year, 'x', ''))) %>% 
-#  mutate(catch= str_replace(catch, c(' F'), replacement = '')) %>% 
-#  mutate(catch= str_replace(catch, c('...'), replacement = '')) %>% 
-#  mutate(catch= str_replace(catch, c('-'), replacement = '')) %>% 
-#  mutate(catch= str_replace(catch, c('0 0'), replacement = ''))
+fisheries_tidy <- fisheries %>% 
+  pivot_longer(-c(country,common_name,isscaap_group_number,isscaap_taxonomic_group,asfis_species_number,asfis_species_name,fao_major_fishing_area,measure),
+               names_to = "year",
+               values_to = "catch",
+               values_drop_na = TRUE) %>% 
+  mutate(year= as.numeric(str_replace(year, 'x', ''))) %>% 
+  mutate(catch= str_replace(catch, c(' F'), replacement = '')) %>% 
+  mutate(catch= str_replace(catch, c('...'), replacement = '')) %>% 
+  mutate(catch= str_replace(catch, c('-'), replacement = '')) %>% 
+  mutate(catch= str_replace(catch, c('0 0'), replacement = ''))
 
-#fisheries_tidy$catch <- as.numeric(fisheries_tidy$catch)
+fisheries_tidy$catch <- as.numeric(fisheries_tidy$catch)
 ```
 
 3. How many countries are represented in the data? Provide a count and list their names.
 ```{r}
-
+table(fisheries_tidy$country)
 ```
+For a more precise count of the number of countries in the data: 
+```{r}
+n_distinct(fisheries_tidy$country)
+```
+We have 204 distinct observations in the country variable.
 
 4. Refocus the data only to include country, isscaap_taxonomic_group, asfis_species_name, asfis_species_number, year, catch.
-```{r}
 
+```{r}
+names(fisheries_tidy)
+```
+
+```{r}
+fisheries_tidy %>% 
+  select(country, isscaap_taxonomic_group, asfis_species_name, asfis_species_number, year, catch)
 ```
 
 5. Based on the asfis_species_number, how many distinct fish species were caught as part of these data?
 ```{r}
-
+n_distinct(fisheries_tidy$asfis_species_number)
 ```
+We have 1553 distinct fish species
 
 6. Which country had the largest overall catch in the year 2000?
 ```{r}
-
+fisheries_tidy %>% 
+  select(country, year, catch, isscaap_taxonomic_group, asfis_species_name, asfis_species_number, year) %>% 
+  filter(year=="2000") %>% 
+  arrange(desc(catch))
 ```
+In 2000, China had the largest overall catch of 9068 (no units specified). 
 
 7. Which country caught the most sardines (_Sardina pilchardus_) between the years 1990-2000?
 ```{r}
-
+fisheries_tidy %>% 
+  select(country,catch, year, isscaap_taxonomic_group, asfis_species_name, asfis_species_number, year) %>% 
+  filter(year >=1900 & year <=2000) %>%
+  filter(asfis_species_name == "Sardina pilchardus") %>% 
+  arrange(desc(catch))
 ```
+As shown, Spain had the highest number of sardine catches (totaling to 986) during the year 1989. 
+
 
 8. Which five countries caught the most cephalopods between 2008-2012?
 ```{r}
-
+fisheries_tidy %>% 
+  select(country,catch, year, isscaap_taxonomic_group, asfis_species_name, asfis_species_number, year) %>% 
+  filter(year >=2008 & year <=2012) %>%
+  filter(asfis_species_name == "Cephalopoda") %>% 
+  arrange(desc(catch))
 ```
+As shown, the top 5 countries to catch the most Cephalopoda are. India in 2011, India in 2010, India 2012, China in 2008, China in 2010. 
 
 9. Which species had the highest catch total between 2008-2012? (hint: Osteichthyes is not a species)
 ```{r}
+fisheries_tidy %>% 
+  select(country,catch, year, isscaap_taxonomic_group, asfis_species_name, asfis_species_number) %>% 
+  filter(year >=2008 & year <=2012) %>%
+  arrange(desc(catch))
+````
+The species with the highest catch were the Trichiurus lepturus with 8221 catches during 2011 by China. 
 
+10. Use the data to do at least one analysis of your choice. Which country had the highest number of catches during the year 2003? What group of fish? 
+
+```{r}
+fisheries_tidy %>% 
+  select(country,catch, year, asfis_species_name) %>% 
+  filter(year==2003) %>%
+  arrange(desc(catch))
 ```
-
-10. Use the data to do at least one analysis of your choice.
-
+Viet Nam had the highest number of catches during 2003. Osteichthyes (a diverse superclass of bony fish) were the most caught. 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences.   
