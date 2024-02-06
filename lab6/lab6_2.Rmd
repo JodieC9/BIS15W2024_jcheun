@@ -56,7 +56,7 @@ summary(superhero_powers)
 
 ```{r}
 superhero_info %>% 
-  tabyl(publisher) %>% 
+  tabyl(publisher) %>% ##counting the number of times we have that publisher, the % is that publisher amount within the whole dataset. Mostly used for us to get the n- count number (alt to `count` ) 
   arrange(desc(percent))
 ```
 With a combination of `tabyl` and `desc` to specify the data we want from the dataframe, we observe that Marvel Comics publisher has the highest percentage of superheros (n-value). 
