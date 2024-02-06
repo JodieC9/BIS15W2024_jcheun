@@ -1,0 +1,168 @@
+---
+title: "Midterm 1 W24"
+author: "Jodie Cheun"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    keep_md: yes
+  pdf_document: default
+---
+
+## Instructions
+Answer the following questions and complete the exercises in RMarkdown. Please embed all of your code and push your final work to your repository. Your code must be organized, clean, and run free from errors. Remember, you must remove the `#` for any included code chunks to run. Be sure to add your name to the author header above. 
+
+Your code must knit in order to be considered. If you are stuck and cannot answer a question, then comment out your code and knit the document. You may use your notes, labs, and homework to help you complete this exam. Do not use any other resources- including AI assistance.  
+
+Don't forget to answer any questions that are asked in the prompt!  
+
+Be sure to push your completed midterm to your repository. This exam is worth 30 points.  
+
+## Background
+In the data folder, you will find data related to a study on wolf mortality collected by the National Park Service. You should start by reading the `README_NPSwolfdata.pdf` file. This will provide an abstract of the study and an explanation of variables.  
+
+The data are from: Cassidy, Kira et al. (2022). Gray wolf packs and human-caused wolf mortality. [Dryad](https://doi.org/10.5061/dryad.mkkwh713f). 
+
+## Load the libraries
+```{r message=FALSE, warning=FALSE}
+library("tidyverse")
+library("janitor")
+```
+
+## Load the wolves data
+In these data, the authors used `NULL` to represent missing values. I am correcting this for you below and using `janitor` to clean the column names.
+```{r message=FALSE, warning=FALSE}
+wolves <- read.csv("data/NPS_wolfmortalitydata.csv", na = c("NULL")) %>% clean_names()
+```
+
+## Questions
+Problem 1. (1 point) Let's start with some data exploration. What are the variable (column) names?  
+```{r}
+names(wolves)
+```
+
+Problem 2. (1 point) Use the function of your choice to summarize the data and get an idea of its structure.  
+```{r}
+glimpse(wolves)
+```
+```{r}
+summary(wolves)
+```
+
+Problem 3. (3 points) Which parks/ reserves are represented in the data? Don't just use the abstract, pull this information from the data. 
+```{r}
+table(wolves$park)
+```
+The parks included in the data, and how many times they are counted, are shown above. 
+
+Problem 4. (4 points) Which park has the largest number of wolf packs?
+```{r}
+tabyl(wolves,packsize_aug) %>% 
+  arrange(desc(packsize_aug))
+```
+```{r}
+n_distinct(wolves$packsize_aug)
+```
+
+
+```{r}
+wolves %>% 
+  select(park, pack,packsize_aug) %>% 
+  arrange(desc(packsize_aug))
+```
+As shown, YNP park from the druid pack has the largest pack size at 37.0. 
+
+Problem 5. (4 points) Which park has the highest total number of human-caused mortalities `mort_all`?
+
+```{r}
+wolves %>% 
+  select(park,pack,mort_all) %>% 
+  arrange(desc(mort_all))
+```
+The YUCH park has the highest number of human-caused mortalities, at 24 mortalities
+
+The wolves in [Yellowstone National Park](https://www.nps.gov/yell/learn/nature/wolf-restoration.htm) are an incredible conservation success story. Let's focus our attention on this park.  
+
+Problem 6. (2 points) Create a new object "ynp" that only includes the data from Yellowstone National Park. 
+```{r}
+names(wolves)
+```
+
+
+```{r}
+ynp <- select(wolves, park, mort_all, biolyr, mort_lead, pack, mort_nonlead,packcode,reprody1,packsize_aug,persisty1,mort_yn) %>% 
+  filter(park=="YNP")
+
+ynp
+```
+
+
+Problem 7. (3 points) Among the Yellowstone wolf packs, the [Druid Peak Pack](https://www.pbs.org/wnet/nature/in-the-valley-of-the-wolves-the-druid-wolf-pack-story/209/) is one of most famous. What was the average pack size of this pack for the years represented in the data?
+
+```{r}
+ynp %>% 
+  filter(pack=="druid") %>% 
+  summarise(mean_packsize=mean(packsize_aug),
+            total=n())
+```
+Mean pack size for the years included in the YNP data is 13.93 for the druid pack. 
+
+Problem 8. (4 points) Pack dynamics can be hard to predict- even for strong packs like the Druid Peak pack. At which year did the Druid Peak pack have the largest pack size? What do you think happened in 2010?
+```{r}
+summary(ynp)
+```
+
+
+```{r}
+ynp %>% 
+  select(park,pack,biolyr,packsize_aug,) %>% 
+  filter(pack=="druid") %>% 
+  arrange(desc(packsize_aug))
+```
+The Druid pack had the largest pack size during 2001 at 37 packs. 
+
+```{r}
+ynp %>% 
+  select(park,pack,biolyr,packsize_aug,) %>% 
+  filter(biolyr==2010) %>% 
+  filter(pack=="druid")
+```
+By specifying a biolyr only equal to 2010, we can observe the pack size during this time. Surprisingly, the pack size is 0. Compared to the pack size of 12 in 2009 and 21 in 2008 of the years prior, some large scale extinction event or series of stressors must have occurred. A quick online search shows that this wolf pack was under lot of stress by mange, competition, and natural dispersal.Factors that dwindled the pack size for Druids down to 0. 
+
+
+Problem 9. (5 points) Among the YNP wolf packs, which one has had the highest overall persistence `persisty1` for the years represented in the data? Look this pack up online and tell me what is unique about its behavior- specifically, what prey animals does this pack specialize on?  
+
+```{r}
+ynp %>% 
+  group_by(pack,biolyr) %>% 
+  summarise(totalpersistance=mean(persisty1), 
+            total=n()) %>% 
+  arrange(desc(totalpersistance))
+```
+```{r}
+n_distinct(ynp$pack)
+```
+```{r}
+table(ynp$pack)
+```
+```{r}
+tabyl(ynp$pack) %>% 
+  arrange(desc(n))
+```
+By making a sub data set, we can see which packs had a total persistence of 1.0, which from the readme file, is the highest value for the persistence. Then, to account for the `highest total overall pesistance` we need to check which wolf pack from the sub data set is the most abundant (with persistence values of 1.0). Using tabyl to see the number of packs, we see that the mollies wolf pack is the most abundant pack at 26, all with persistence of 1.0. Hence, mollies is the wolf pack with the highest overall persistence
+
+An online search shows that the mollie's pack have unique behavior of hunting bison and having regular interactions with bears. This is strange behavior since wolves in YNP tend to avoid bison. 
+
+Problem 10. (3 points) Perform one analysis or exploration of your choice on the `wolves` data. Your answer needs to include at least two lines of code and not be a summary function.  
+
+Analysis: What was the total number of human caused mortalities (`mortALL`) for the Druid pack in 2003 from YNP? 
+
+```{r}
+ynp %>% 
+  select(pack,mort_all,biolyr) %>% 
+  filter(biolyr==2003) %>% 
+  filter(pack=="druid") %>% 
+  arrange(desc(mort_all))
+```
+As shown, the druid pack had no mortalities dring the year 2003. 
+
+At the end of the exam, open up the knitted file (orginally html) and save it as a pdf. Then uploading this pdf file into gradescope. 
