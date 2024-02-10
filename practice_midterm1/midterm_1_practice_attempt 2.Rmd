@@ -172,9 +172,15 @@ gabon %>%
   filter(distance>25) %>% 
   summarise(across(contains("ra_"),mean,na.rm=T))
 ```
-Because we are using across, the mutation to find the mean of all the observations in columns that begin with "RA_" is going to include EVERYTHING. Which is fine but makes finding the data we want in particular a bit more difficult. Using `select` specified the columns we want to look at specifically, so we only see the
+Because we are using across, the mutation to find the mean of all the observations in columns that begin with "RA_" is going to include EVERYTHING. Which is fine but makes finding the data we want in particular a bit more difficult. Using `select` specified the columns we want to look at specifically, so we only see the ones we want
 
-Need to ask, what about this question tells us we need to find the mean of the ra values? 
+```{r}
+gabon %>% 
+  filter(distance>25) %>% 
+  mutate(mean(contains("ra_"),na.rm=T)) ##no where to make a new variable 
+```
+
+Need to ask, what about this question tells us we need to find the *mean* of the ra values? 
 
 
 

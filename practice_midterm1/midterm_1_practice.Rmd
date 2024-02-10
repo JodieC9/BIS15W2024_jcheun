@@ -143,10 +143,9 @@ names(Invindo)
 ```
 ```{r}
 Invindo %>% 
-  select(TransectID, HuntCat, Diversity_BirdSpecies, Diversity_MammalSpecies) %>% 
-  filter(HuntCat=="high"|HuntCat=="moderate") %>% 
+  filter(HuntCat=="High"|HuntCat=="Moderate") %>% 
   group_by(HuntCat) %>% 
-  summarize(mean_bird_diversity=mean(Diversity_BirdSpecies),
+  summarise(mean_bird_diversity=mean(Diversity_BirdSpecies),
             mean_mammal_diversity=mean(Diversity_MammalSpecies),
             nsamples=n())
   
@@ -176,6 +175,7 @@ Invindo %>%
             mean_mammal_diversity=mean(Diversity_MammalSpecies),
             nsamples=n())
 ```
+
 
 11. (4 points) One of the conclusions in the study is that the relative abundance of animals drops off the closer you get to a village. Let's try to reconstruct this (without the statistics). How does the relative abundance (RA) of apes, birds, elephants, monkeys, rodents, and ungulates compare between sites that are less than 3km from a village to sites that are greater than 25km from a village? The variable `Distance` measures the distance of the transect from the nearest village. Hint: try using the `across` operator.  
 
