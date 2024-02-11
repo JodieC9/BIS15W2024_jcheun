@@ -4,9 +4,9 @@ date: "`r Sys.Date()`"
 output:
   html_document: 
     theme: spacelab
-    toc: yes
-    toc_float: yes
-    keep_md: yes
+    toc: true
+    toc_float: true
+    keep_md: true
   pdf_document:
     toc: yes
 ---
@@ -160,6 +160,21 @@ names(penguins)
   #group_by(species) %>% 
   #summarise(across(contains("mm") mean,na.rm=T))
 
+```
+The mistake in this code is that you did not form the vector for the variables you want the `across` function to be applied to. AKA you did not include the `c` in front of the (contains("mm")) aspect. 
+
+```{r}
+penguins %>% 
+  group_by(species) %>% 
+  summarize(across(c(contains("mm"), body_mass_g), mean, na.rm=T ),
+            n_samples=n())
+```
+
+```{r}
+penguins %>% 
+  group_by(species) %>% 
+  summarize(across(c(contains("mm"), body_mass_g), sd, na.rm=T ),
+            n_samples=n())
 ```
 
 ## That's it! Let's take a break and then move on to part 2! 

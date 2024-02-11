@@ -1,12 +1,12 @@
 ---
 title: "Midterm Review and `across()` "
-date: "2024-02-08"
+date: "2024-02-10"
 output:
   html_document: 
     theme: spacelab
-    toc: yes
-    toc_float: yes
-    keep_md: yes
+    toc: true
+    toc_float: true
+    keep_md: true
   pdf_document:
     toc: yes
 ---
@@ -334,6 +334,41 @@ names(penguins)
 #penguins %>% 
   #group_by(species) %>% 
   #summarise(across(contains("mm") mean,na.rm=T))
+```
+The mistake in this code is that you did not form the vector for the variables you want the `across` function to be applied to. AKA you did not include the `c` in front of the (contains("mm")) aspect. 
+
+
+```r
+penguins %>% 
+  group_by(species) %>% 
+  summarize(across(c(contains("mm"), body_mass_g), mean, na.rm=T ),
+            n_samples=n())
+```
+
+```
+## # A tibble: 3 × 6
+##   species   bill_length_mm bill_depth_mm flipper_length_mm body_mass_g n_samples
+##   <fct>              <dbl>         <dbl>             <dbl>       <dbl>     <int>
+## 1 Adelie              38.8          18.3              190.       3701.       152
+## 2 Chinstrap           48.8          18.4              196.       3733.        68
+## 3 Gentoo              47.5          15.0              217.       5076.       124
+```
+
+
+```r
+penguins %>% 
+  group_by(species) %>% 
+  summarize(across(c(contains("mm"), body_mass_g), sd, na.rm=T ),
+            n_samples=n())
+```
+
+```
+## # A tibble: 3 × 6
+##   species   bill_length_mm bill_depth_mm flipper_length_mm body_mass_g n_samples
+##   <fct>              <dbl>         <dbl>             <dbl>       <dbl>     <int>
+## 1 Adelie              2.66         1.22               6.54        459.       152
+## 2 Chinstrap           3.34         1.14               7.13        384.        68
+## 3 Gentoo              3.08         0.981              6.48        504.       124
 ```
 
 ## That's it! Let's take a break and then move on to part 2! 

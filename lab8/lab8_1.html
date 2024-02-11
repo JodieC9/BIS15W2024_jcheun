@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2024-02-08" />
+<meta name="date" content="2024-02-10" />
 
 <title>Midterm Review and across()</title>
 
@@ -1504,7 +1504,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Midterm Review and
 <code>across()</code></h1>
-<h4 class="date">2024-02-08</h4>
+<h4 class="date">2024-02-10</h4>
 
 </div>
 
@@ -1747,6 +1747,30 @@ species. Be sure to provide the number of samples.</li>
 <pre class="r"><code>#penguins %&gt;% 
   #group_by(species) %&gt;% 
   #summarise(across(contains(&quot;mm&quot;) mean,na.rm=T))</code></pre>
+<p>The mistake in this code is that you did not form the vector for the
+variables you want the <code>across</code> function to be applied to.
+AKA you did not include the <code>c</code> in front of the
+(contains(“mm”)) aspect.</p>
+<pre class="r"><code>penguins %&gt;% 
+  group_by(species) %&gt;% 
+  summarize(across(c(contains(&quot;mm&quot;), body_mass_g), mean, na.rm=T ),
+            n_samples=n())</code></pre>
+<pre><code>## # A tibble: 3 × 6
+##   species   bill_length_mm bill_depth_mm flipper_length_mm body_mass_g n_samples
+##   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;dbl&gt;       &lt;dbl&gt;     &lt;int&gt;
+## 1 Adelie              38.8          18.3              190.       3701.       152
+## 2 Chinstrap           48.8          18.4              196.       3733.        68
+## 3 Gentoo              47.5          15.0              217.       5076.       124</code></pre>
+<pre class="r"><code>penguins %&gt;% 
+  group_by(species) %&gt;% 
+  summarize(across(c(contains(&quot;mm&quot;), body_mass_g), sd, na.rm=T ),
+            n_samples=n())</code></pre>
+<pre><code>## # A tibble: 3 × 6
+##   species   bill_length_mm bill_depth_mm flipper_length_mm body_mass_g n_samples
+##   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;dbl&gt;       &lt;dbl&gt;     &lt;int&gt;
+## 1 Adelie              2.66         1.22               6.54        459.       152
+## 2 Chinstrap           3.34         1.14               7.13        384.        68
+## 3 Gentoo              3.08         0.981              6.48        504.       124</code></pre>
 </div>
 <div id="thats-it-lets-take-a-break-and-then-move-on-to-part-2" class="section level2">
 <h2>That’s it! Let’s take a break and then move on to part 2!</h2>
