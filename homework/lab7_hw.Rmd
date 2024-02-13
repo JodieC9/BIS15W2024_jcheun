@@ -57,7 +57,7 @@ names(amniota)
 amniota %>% 
   map_df(~sum(is.na(.)))
 ```
-While the `map_df` does not show any NAs in the data, we can notice some strange observation values from the `summary` function, specifically the -999.0 values. As such, we need to fix the way NA are represented in the `amniota` data. 
+While the `map_df` does not show any NAs in the data, we can notice some strange observation values from the `summary` function, specifically the "-999.0" values. As such, we need to fix the way NA are represented in the `amniota` data. 
 
 **3. Do some exploratory analysis of the `amphibio` data set. Use the function(s) of your choice. Try to get an idea of how NA's are represented in the data.**  
 ```{r}
@@ -84,7 +84,7 @@ amniota %>%
 ```{r}
 miss_var_summary(amniota)
 ```
-In the amniota dataset, neither the `map_df` or `miss_var_summary` functions report findings of NA in the data. However, we know this is suspicious from the -999.0 values observed by the `summary` function. Hinting these -999.0 values are likely placeholders for NA values in the data. 
+In the `amniota` data, neither the `map_df` or `miss_var_summary` functions report findings of NA in the data. However, we know this is suspicious from the "-999.0" values observed by the `summary` function. Hinting these "-999.0" values are likely placeholders for NA values in the data. 
 
 
 ```{r}
@@ -101,7 +101,7 @@ amphibio %>%
   summarise(total_NA=sum(is.na(amphibio)))
 ```
 
-In the amphibio dataset, we observe a total of 170566 NA values from various variables. 
+In the `amphibio` dataset, we observe a total of 170566 NA values from various variables. 
  
 **5. Make any necessary replacements in the data such that all NA's appear as "NA".**   
 ```{r}
@@ -142,13 +142,20 @@ new_amniota <- amniota%>%
                                  adult_body_mass_g=--30258.71))
 new_amniota
 ```
+An alternative code to replace all the NA values in the `amniota` data is as follows:
+```{r}
+new_amniota <- amniota %>% 
+  replace_with_na_all(condition = ~.x ==-999)
+new_amniota
+```
+
 
 ```{r}
 new_amniota %>% 
   summarise(total_na_amniota=sum(is.na(new_amniota)))
 ```
 
-Since we do see accurately accounted for NA values in the amphibio data, no changes are needed there. However, in the amniota datset, we have several variations of placeholder values in almost all variables that need to be accounted for and changed to NA. Using the `replace_with_NA` function, we can specify the exact variation of the NA placeholder used in each variable spot. To double check out work, we can view the new version of the amniota data to check that all -999 iterations are removed and replaced with NA. 
+Since we do see accurately accounted NA values in the `amphibio` data, no changes are needed there. However, in the `amniota` data, we have several variations of placeholder values in almost all variables that need to be accounted for and changed to NA. Using the `replace_with_NA` function, we can specify the exact variation of the NA placeholder used in each variable spot. To double check our work, we can view the new version of the `amniota` (`new_amniota`) data to check that all "-999" iterations are removed and replaced with NA. 
 
 **6. Use the package `naniar` to produce a summary, including percentages, of missing data in each column for the `amniota` data.**  
 ```{r}
@@ -165,9 +172,10 @@ miss_var_summary(amphibio)
 new_amniota %>% 
   group_by(class) %>% 
   select(class,egg_mass_g) %>% 
-  miss_var_summary(order=T)
+  miss_var_summary(order=T) %>% #Ask what order=T 
+  arrange(desc(pct_miss))
 ```
-For the mammalia class, yes these results make sense biologically, simply because we know that mammals (except the platypus) do not lay eggs in their reproductive cycle. The aves and and Reptilia classes make less biological sense on why their taxonomc classes have such high proportions of NA values. While the Aves class do not have the worse percentage of NA values (although 50% is pretty high), the Reptilia class haveing almost 92% of missing data is quite concerning. A quick Google search to help explain this high percentage of NA values demonstrates that reptiles tend to be difficult to study/survey. 
+For the mammalia class, yes these results make sense biologically, simply because we know that mammals (except the platypus) do not lay eggs in their reproductive cycle. The Aves and and Reptilia classes make less biological sense on why their taxonomic classes have such high proportions of NA values. While the Aves class do not have the worse percentage of NA values (although 50% is pretty high), the Reptilia class having almost 92% of missing data is quite concerning despite being egg laying organisms. A quick Google search to help explain this high percentage of NA values demonstrates that reptiles tend to be difficult to study/survey. 
 
 **9. The `amphibio` data have variables that classify species as fossorial (burrowing), terrestrial, aquatic, or arboreal.Calculate the number of NA's in each of these variables. Do you think that the authors intend us to think that there are NA's in these columns or could they represent something else? Explain.**
 ```{r}
@@ -176,13 +184,14 @@ amphibio %>%
   miss_var_summary()
 ```
 
-From the data itself, it seems a majority of the NA values are placed depending on the species being recorded. Specifically, all variables of fos, arb, aqu, and ter, are included and are makred 1 if this lifestyle is applicable to the species and marked NA if this lifestyle is not applicable to the species. For clarification, `lifestyle` is being used to decribe the types of lands each species depends/lives on. 
+From the data itself, it seems a majority of the NA values are placed depending on the species being recorded. Specifically, all variables of fos, arb, aqu, and ter, are included and marked 1 if this lifestyle is applicable to the species, marked 0 if null, and marked NA if this lifestyle is not relevant to the species being studied. For clarification, `lifestyle` is being used to describe the types of lands each species depends on (listed in question 8). 
 
 **10. Now that we know how NA's are represented in the `amniota` data, how would you load the data such that the values which represent NA's are automatically converted?**
 ```{r}
 new_amniota2 <- read_csv("data/amniota.csv",na=c("-999", "-999.0","-999.00", "-999.000","-999.0000","-999.00000", "-999.00000"))
 ```
 
-After thoroughly going through the amniota data, we see a common pattern of -999 iterations being used as NA placeholders in various variables. As such, we can deal with these -999 values in advance by specifying all the values we want R to consider and replace with NA before the data gets loaded into R Studio for us to use. 
+After thoroughly going through the `amniota` data, we see a common pattern of "-999" iterations being used as NA placeholders in various variables. As such, we can deal with these "-999" values in advance by specifying all the values we want R to consider and replace with NA before the data gets loaded into R Studio for us to use. 
+
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences.  

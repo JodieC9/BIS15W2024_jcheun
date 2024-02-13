@@ -1,7 +1,7 @@
 ---
 title: "Homework 7"
 author: "Your Name Here"
-date: "2024-02-11"
+date: "2024-02-12"
 output:
   html_document: 
     theme: spacelab
@@ -217,7 +217,7 @@ amniota %>%
 ## #   male_maturity_d <int>, inter_litter_or_interbirth_interval_y <int>,
 ## #   female_body_mass_g <int>, male_body_mass_g <int>, …
 ```
-While the `map_df` does not show any NAs in the data, we can notice some strange observation values from the `summary` function, specifically the -999.0 values. As such, we need to fix the way NA are represented in the `amniota` data. 
+While the `map_df` does not show any NAs in the data, we can notice some strange observation values from the `summary` function, specifically the "-999.0" values. As such, we need to fix the way NA are represented in the `amniota` data. 
 
 **3. Do some exploratory analysis of the `amphibio` data set. Use the function(s) of your choice. Try to get an idea of how NA's are represented in the data.**  
 
@@ -399,7 +399,7 @@ miss_var_summary(amniota)
 ## 10 litters_or_clutches_per_y      0        0
 ## # ℹ 26 more rows
 ```
-In the amniota dataset, neither the `map_df` or `miss_var_summary` functions report findings of NA in the data. However, we know this is suspicious from the -999.0 values observed by the `summary` function. Hinting these -999.0 values are likely placeholders for NA values in the data. 
+In the `amniota` data, neither the `map_df` or `miss_var_summary` functions report findings of NA in the data. However, we know this is suspicious from the "-999.0" values observed by the `summary` function. Hinting these "-999.0" values are likely placeholders for NA values in the data. 
 
 
 
@@ -457,7 +457,7 @@ amphibio %>%
 ## 1   170566
 ```
 
-In the amphibio dataset, we observe a total of 170566 NA values from various variables. 
+In the `amphibio` dataset, we observe a total of 170566 NA values from various variables. 
  
 **5. Make any necessary replacements in the data such that all NA's appear as "NA".**   
 
@@ -562,6 +562,37 @@ new_amniota
 ## #   incubation_d <dbl>, fledging_age_d <dbl>, longevity_y <dbl>,
 ## #   male_maturity_d <dbl>, inter_litter_or_interbirth_interval_y <dbl>, …
 ```
+An alternative code to replace all the NA values in the `amniota` data is as follows:
+
+```r
+new_amniota <- amniota %>% 
+  replace_with_na_all(condition = ~.x ==-999)
+new_amniota
+```
+
+```
+## # A tibble: 21,322 × 36
+##    class order     family genus species subspecies common_name female_maturity_d
+##    <chr> <chr>     <chr>  <chr> <chr>        <dbl> <chr>                   <dbl>
+##  1 Aves  Accipitr… Accip… Acci… albogu…         NA Pied Gosha…               NA 
+##  2 Aves  Accipitr… Accip… Acci… badius          NA Shikra                   363.
+##  3 Aves  Accipitr… Accip… Acci… bicolor         NA Bicolored …               NA 
+##  4 Aves  Accipitr… Accip… Acci… brachy…         NA New Britai…               NA 
+##  5 Aves  Accipitr… Accip… Acci… brevip…         NA Levant Spa…              363.
+##  6 Aves  Accipitr… Accip… Acci… castan…         NA Chestnut-f…               NA 
+##  7 Aves  Accipitr… Accip… Acci… chilen…         NA Chilean Ha…               NA 
+##  8 Aves  Accipitr… Accip… Acci… chiono…         NA White-brea…              548.
+##  9 Aves  Accipitr… Accip… Acci… cirroc…         NA Collared S…               NA 
+## 10 Aves  Accipitr… Accip… Acci… cooper…         NA Cooper's H…              730 
+## # ℹ 21,312 more rows
+## # ℹ 28 more variables: litter_or_clutch_size_n <dbl>,
+## #   litters_or_clutches_per_y <dbl>, adult_body_mass_g <dbl>,
+## #   maximum_longevity_y <dbl>, gestation_d <dbl>, weaning_d <dbl>,
+## #   birth_or_hatching_weight_g <dbl>, weaning_weight_g <dbl>, egg_mass_g <dbl>,
+## #   incubation_d <dbl>, fledging_age_d <dbl>, longevity_y <dbl>,
+## #   male_maturity_d <dbl>, inter_litter_or_interbirth_interval_y <dbl>, …
+```
+
 
 
 ```r
@@ -573,10 +604,10 @@ new_amniota %>%
 ## # A tibble: 1 × 1
 ##   total_na_amniota
 ##              <int>
-## 1           500790
+## 1           528196
 ```
 
-Since we do see accurately accounted for NA values in the amphibio data, no changes are needed there. However, in the amniota datset, we have several variations of placeholder values in almost all variables that need to be accounted for and changed to NA. Using the `replace_with_NA` function, we can specify the exact variation of the NA placeholder used in each variable spot. To double check out work, we can view the new version of the amniota data to check that all -999 iterations are removed and replaced with NA. 
+Since we do see accurately accounted NA values in the `amphibio` data, no changes are needed there. However, in the `amniota` data, we have several variations of placeholder values in almost all variables that need to be accounted for and changed to NA. Using the `replace_with_NA` function, we can specify the exact variation of the NA placeholder used in each variable spot. To double check our work, we can view the new version of the `amniota` (`new_amniota`) data to check that all "-999" iterations are removed and replaced with NA. 
 
 **6. Use the package `naniar` to produce a summary, including percentages, of missing data in each column for the `amniota` data.**  
 
@@ -590,14 +621,14 @@ miss_var_summary(new_amniota)
 ##    <chr>                           <int>    <dbl>
 ##  1 subspecies                      21322    100  
 ##  2 female_body_mass_at_maturity_g  21318    100. 
-##  3 fledging_mass_g                 21111     99.0
-##  4 male_svl_cm                     21040     98.7
-##  5 no_sex_maturity_d               20860     97.8
-##  6 egg_width_mm                    20727     97.2
-##  7 egg_length_mm                   20702     97.1
-##  8 weaning_weight_g                20258     95.0
-##  9 female_svl_cm                   20242     94.9
-## 10 birth_or_hatching_svl_cm        20085     94.2
+##  3 female_svl_at_maturity_cm       21120     99.1
+##  4 fledging_mass_g                 21111     99.0
+##  5 male_svl_cm                     21040     98.7
+##  6 no_sex_maturity_d               20860     97.8
+##  7 egg_width_mm                    20727     97.2
+##  8 egg_length_mm                   20702     97.1
+##  9 weaning_weight_g                20258     95.0
+## 10 female_svl_cm                   20242     94.9
 ## # ℹ 26 more rows
 ```
 
@@ -630,7 +661,8 @@ miss_var_summary(amphibio)
 new_amniota %>% 
   group_by(class) %>% 
   select(class,egg_mass_g) %>% 
-  miss_var_summary(order=T)
+  miss_var_summary(order=T) %>% #Ask what order=T 
+  arrange(desc(pct_miss))
 ```
 
 ```
@@ -638,11 +670,11 @@ new_amniota %>%
 ## # Groups:   class [3]
 ##   class    variable   n_miss pct_miss
 ##   <chr>    <chr>       <int>    <dbl>
-## 1 Aves     egg_mass_g   4914     50.1
-## 2 Mammalia egg_mass_g   4953    100  
-## 3 Reptilia egg_mass_g   6040     92.0
+## 1 Mammalia egg_mass_g   4953    100  
+## 2 Reptilia egg_mass_g   6040     92.0
+## 3 Aves     egg_mass_g   4914     50.1
 ```
-For the mammalia class, yes these results make sense biologically, simply because we know that mammals (except the platypus) do not lay eggs in their reproductive cycle. The aves and and Reptilia classes make less biological sense on why their taxonomc classes have such high proportions of NA values. While the Aves class do not have the worse percentage of NA values (although 50% is pretty high), the Reptilia class haveing almost 92% of missing data is quite concerning. A quick Google search to help explain this high percentage of NA values demonstrates that reptiles tend to be difficult to study/survey. 
+For the mammalia class, yes these results make sense biologically, simply because we know that mammals (except the platypus) do not lay eggs in their reproductive cycle. The Aves and and Reptilia classes make less biological sense on why their taxonomic classes have such high proportions of NA values. While the Aves class do not have the worse percentage of NA values (although 50% is pretty high), the Reptilia class having almost 92% of missing data is quite concerning despite being egg laying organisms. A quick Google search to help explain this high percentage of NA values demonstrates that reptiles tend to be difficult to study/survey. 
 
 **9. The `amphibio` data have variables that classify species as fossorial (burrowing), terrestrial, aquatic, or arboreal.Calculate the number of NA's in each of these variables. Do you think that the authors intend us to think that there are NA's in these columns or could they represent something else? Explain.**
 
@@ -662,7 +694,7 @@ amphibio %>%
 ## 4 ter        1104     16.3
 ```
 
-From the data itself, it seems a majority of the NA values are placed depending on the species being recorded. Specifically, all variables of fos, arb, aqu, and ter, are included and are makred 1 if this lifestyle is applicable to the species and marked NA if this lifestyle is not applicable to the species. For clarification, `lifestyle` is being used to decribe the types of lands each species depends/lives on. 
+From the data itself, it seems a majority of the NA values are placed depending on the species being recorded. Specifically, all variables of fos, arb, aqu, and ter, are included and marked 1 if this lifestyle is applicable to the species, marked 0 if null, and marked NA if this lifestyle is not relevant to the species being studied. For clarification, `lifestyle` is being used to describe the types of lands each species depends on (listed in question 8). 
 
 **10. Now that we know how NA's are represented in the `amniota` data, how would you load the data such that the values which represent NA's are automatically converted?**
 
@@ -689,6 +721,7 @@ new_amniota2 <- read_csv("data/amniota.csv",na=c("-999", "-999.0","-999.00", "-9
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 
-After thoroughly going through the amniota data, we see a common pattern of -999 iterations being used as NA placeholders in various variables. As such, we can deal with these -999 values in advance by specifying all the values we want R to consider and replace with NA before the data gets loaded into R Studio for us to use. 
+After thoroughly going through the `amniota` data, we see a common pattern of "-999" iterations being used as NA placeholders in various variables. As such, we can deal with these "-999" values in advance by specifying all the values we want R to consider and replace with NA before the data gets loaded into R Studio for us to use. 
+
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences.  
