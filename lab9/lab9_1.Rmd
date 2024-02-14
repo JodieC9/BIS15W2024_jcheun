@@ -158,25 +158,23 @@ plant_data
 2. Why are these data not tidy?  
 These data are not tidy because the day observations are set as individual columns. We need to set all the days under a "time" observation 
 ```{r}
-plant_data %>%  
-pivot_longer(-genotype, #patient will not move
-               names_to = "income", #make a new column called "income"
-               values_to="total" #values moved to a new column called "total"
-```
-
-```{r}
-plant_data %>% 
-  pivot_longer(-c(genotype,water_sched_prog,greenhouse),
-               names_to = "v1", 
-               values_to = "v2",
-               values_drop_na = T)
+#plant_data %>%  
+#pivot_longer(-genotype, #patient will not move
+               #names_to = "income", #make a new column called "income"
+               #values_to="total") #values moved to a new column called "total"
 ```
 values_drop_na =T specifies we want to remove NA values 
 
 3. Use `pivot_longer()` to make the data tidy. Focus the data only on genotype, water_sched_prog, and greenhouse.  
 ```{r}
-
+plant_data %>% 
+  pivot_longer(-c(genotype,water_sched_prog,greenhouse),
+               names_to = "v1", 
+               values_to = "v2",
+               values_drop_na = T
+               )
 ```
+values_drop_na =T specifies we want to remove NA values when we change the data from long to wide. 
 
 ## Example 3: more than one variable in a column name
 In this case, there are two observations in each column name.
