@@ -41,7 +41,7 @@ getwd()
 ```
 
 ```
-## [1] "/Users/jjcheun/Desktop/BIS15W2024_jcheun/homework"
+## [1] "/Users/jodiecheun/Desktop/BIS15W2024_jcheun/homework"
 ```
 
 
@@ -90,7 +90,7 @@ library(here)
 ```
 
 ```
-## here() starts at /Users/jjcheun/Desktop/BIS15W2024_jcheun
+## here() starts at /Users/jodiecheun/Desktop/BIS15W2024_jcheun
 ```
 
 The quotes show the folder structure from the root directory.
@@ -132,7 +132,7 @@ sydneybeaches
 ## 10       25 Sydney… Randwi… Clov…      151.    -33.9 25/0…                     0
 ## # ℹ 3,680 more rows
 ```
-No, this data is not tidy, and is currently in the wide data format. We need to flip this data to the long data format so that each date is its own column. 
+No, this data is not tidy, and is currently in the long data format. We need to flip this data to the wide data format so that each date is placed as its own variable (column).
 
 What we are looking for: 
 - does every variable have its own column.  
@@ -287,9 +287,65 @@ sydneybeaches_long%>%
 
 8. Make the output from question 7 easier to read by pivoting it to wide format.
 
+```r
+sydneybeaches_long %>% 
+  pivot_wider(names_from = "date",
+              values_from= "enterococci_cfu_100ml")
+```
 
+```
+## # A tibble: 11 × 345
+##    site         `02/01/2013` `06/01/2013` `12/01/2013` `18/01/2013` `30/01/2013`
+##    <chr>               <dbl>        <dbl>        <dbl>        <dbl>        <dbl>
+##  1 Clovelly Be…           19            3            2           13            8
+##  2 Coogee Beach           15            4           17           18           22
+##  3 Gordons Bay…           NA           NA           NA           NA           NA
+##  4 Little Bay …            9            3           72            1           44
+##  5 Malabar Bea…            2            4          390           15           13
+##  6 Maroubra Be…            1            1           20            2           11
+##  7 South Marou…            1            0           33            2           13
+##  8 South Marou…           12            2          110           13          100
+##  9 Bondi Beach             3            1            2            1            6
+## 10 Bronte Beach            4            2           38            3           25
+## 11 Tamarama Be…            1            0            7           22           23
+## # ℹ 339 more variables: `05/02/2013` <dbl>, `11/02/2013` <dbl>,
+## #   `23/02/2013` <dbl>, `07/03/2013` <dbl>, `25/03/2013` <dbl>,
+## #   `02/04/2013` <dbl>, `12/04/2013` <dbl>, `18/04/2013` <dbl>,
+## #   `24/04/2013` <dbl>, `01/05/2013` <dbl>, `20/05/2013` <dbl>,
+## #   `31/05/2013` <dbl>, `06/06/2013` <dbl>, `12/06/2013` <dbl>,
+## #   `24/06/2013` <dbl>, `06/07/2013` <dbl>, `18/07/2013` <dbl>,
+## #   `24/07/2013` <dbl>, `08/08/2013` <dbl>, `22/08/2013` <dbl>, …
+```
+ By using the pivot_wider command, we can reformat our long data back into wide data. 
 
 9. What was the most polluted beach in 2013?
+Note, pollution is recorded by the `enterococci_cfu_100ml` value, which is essentially measuring contamination values from bacteria abundance. As such, we want to look for which beach had the highest `enterococci_cfu_100ml` values during the 2013 year. 
+
+
+```r
+sydneybeaches_long_date%>% 
+  select(site, year, enterococci_cfu_100ml) %>% 
+  filter(year=="2013") %>% 
+  arrange(desc(enterococci_cfu_100ml))
+```
+
+```
+## # A tibble: 638 × 3
+##    site                    year  enterococci_cfu_100ml
+##    <chr>                   <chr>                 <dbl>
+##  1 Little Bay Beach        2013                   4900
+##  2 Malabar Beach           2013                   2500
+##  3 Maroubra Beach          2013                   2100
+##  4 Malabar Beach           2013                   1500
+##  5 South Maroubra Beach    2013                   1200
+##  6 Bronte Beach            2013                    780
+##  7 Tamarama Beach          2013                    690
+##  8 Gordons Bay (East)      2013                    660
+##  9 Coogee Beach            2013                    630
+## 10 South Maroubra Rockpool 2013                    630
+## # ℹ 628 more rows
+```
+In 2013, the most polluted beach was Little Bay Beach, with an `enterococci_cfu_100ml` value of 4900. 
 
 10. Please complete the class project survey at: [BIS 15L Group Project](https://forms.gle/H2j69Z3ZtbLH3efW6)
 

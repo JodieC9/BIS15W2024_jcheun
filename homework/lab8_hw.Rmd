@@ -59,7 +59,7 @@ sydneybeaches <-read_csv(here("homework", "data", "sydneybeaches.csv")) %>% clea
 ```{r}
 sydneybeaches
 ```
-No, this data is not tidy, and is currently in the wide data format. We need to flip this data to the long data format so that each date is its own column. 
+No, this data is not tidy, and is currently in the long data format. We need to flip this data to the wide data format so that each date is placed as its own variable (column).
 
 What we are looking for: 
 - does every variable have its own column.  
@@ -111,11 +111,23 @@ sydneybeaches_long%>%
 
 8. Make the output from question 7 easier to read by pivoting it to wide format.
 ```{r}
-
+sydneybeaches_long %>% 
+  pivot_wider(names_from = "date",
+              values_from= "enterococci_cfu_100ml")
 ```
-
+ By using the pivot_wider command, we can reformat our long data back into wide data. 
 
 9. What was the most polluted beach in 2013?
+Note, pollution is recorded by the `enterococci_cfu_100ml` value, which is essentially measuring contamination values from bacteria abundance. As such, we want to look for which beach had the highest `enterococci_cfu_100ml` values during the 2013 year. 
+
+```{r}
+sydneybeaches_long_date%>% 
+  select(site, year, enterococci_cfu_100ml) %>% 
+  filter(year=="2013") %>% 
+  arrange(desc(enterococci_cfu_100ml))
+  
+```
+In 2013, the most polluted beach was Little Bay Beach, with an `enterococci_cfu_100ml` value of 4900. 
 
 10. Please complete the class project survey at: [BIS 15L Group Project](https://forms.gle/H2j69Z3ZtbLH3efW6)
 
