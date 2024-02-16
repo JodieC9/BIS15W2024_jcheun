@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output:
   html_document: 
     theme: spacelab
-    keep_md: yes
+    keep_md: true
 ---
 
 ```{r setup, include=FALSE}
@@ -55,6 +55,8 @@ str(colleges)
 ```{r}
 colleges
 ```
+Note that the colleges included in this data set are all in CA.  
+
 ```{r}
 sum(is.na(colleges))
 ```
@@ -74,26 +76,122 @@ LA has the highest number of colleges with 24.
 
 3. Based on your answer to #2, make a plot that shows the number of colleges in the top 10 cities.
 ```{r}
-
+colleges %>% 
+  count(city) %>% 
+  top_n(10,n) %>% 
+  ggplot(aes(y=city, x=n))+
+  geom_col()
 ```
-
+Putting the cities on the y-axis (instead of the x-axis) makes it easier to read the different city names. 
 
 4. The column `COSTT4_A` is the annual cost of each institution. Which city has the highest average cost? Where is it located?
+```{r}
+colleges %>%
+  group_by(city,instnm) %>% 
+  summarise(mean_cost=mean(costt4_a,na.rm=T)) %>% 
+  arrange(desc(mean_cost))
+```
+The Harvey Mudd College located in Claremont city had the highest mean annual cost of attendance at 66498. This city is located in CA. 
 
 5. Based on your answer to #4, make a plot that compares the cost of the individual colleges in the most expensive city. Bonus! Add UC Davis here to see how it compares :>).
 
+Code alone: 
+```{r}
+colleges %>% 
+  filter(city=="Claremont") %>% 
+  group_by(city, instnm) %>% 
+  summarise(total_cost=sum(costt4_a,rm.na=T)) %>% 
+  arrange(desc(total_cost)) 
+```
+Resulting plot (and adding UCD): 
+```{r}
+colleges %>% 
+  filter(city=="Claremont") %>% 
+  group_by(city, instnm) %>% 
+  summarise(total_cost=sum(costt4_a,rm.na=T)) %>% 
+  arrange(desc(total_cost)) %>% 
+  ggplot(aes(y=instnm,x=total_cost))+
+  geom_col(,na.rm = T)
+```
+Note to self: Missing the inclusion of Davis in the above data^^
+
 6. The column `ADM_RATE` is the admissions rate by college and `C150_4_POOLED` is the four-year completion rate. Use a scatterplot to show the relationship between these two variables. What do you think this means?
+```{r}
+colleges %>% 
+  ggplot(aes(x=adm_rate,y=c150_4_pooled))+
+  geom_point()+
+  geom_smooth(method = lm,se=T)
+```
+In the plot shown above, we see there is a negative relationship between college admission rate and 4 year completion rate. The higher the admission rate, the lower the overall 4 year completion rate. On the other hand, the lower the admission rate, the higher the 4 year completion rate. 
+
 
 7. Is there a relationship between cost and four-year completion rate? (You don't need to do the stats, just produce a plot). What do you think this means?
+```{r}
+colleges %>% 
+  ggplot(aes(x=adm_rate,y=costt4_a))+
+  geom_point()+
+  geom_smooth(method = lm,se=T)
+```
+No, there does not seem to be a relationship between admission rate and cost of attendance. As shown in the plot above, the data points between these axis are highly variable with no clear increasing or decreasing trend. 
 
 8. The column titled `INSTNM` is the institution name. We are only interested in the University of California colleges. Make a new data frame that is restricted to UC institutions. You can remove `Hastings College of Law` and `UC San Francisco` as we are only interested in undergraduate institutions.
+```{r}
+uc_colleges <- colleges %>% 
+  select(instnm,city,stabbr,zip,adm_rate,sat_avg,pcip26,costt4_a,c150_4_pooled,pftftug1_ef) %>% 
+  filter(instnm=="University of California-San Diego" | instnm=="University of California-Irvine" | instnm== "University of California-Riverside" | instnm== "University of California-Los Angeles" | instnm =="University of California-Davis" | instnm=="University of California-Santa Cruz" |instnm== "University of California-Santa Barbara" | instnm== "University of California-Berkeley")
+uc_colleges
+```
 
 Remove `Hastings College of Law` and `UC San Francisco` and store the final data frame as a new object `univ_calif_final`.
+```{r}
+univ_calif_final<- uc_colleges 
+```
+Since I manually selected which colleges to include in the filter function, the `Hastings College of Law` and `UC San Francisco` colleges are not included, and hence do not to be removed from the pre-existing `uc_colleges` object. 
 
 Use `separate()` to separate institution name into two new columns "UNIV" and "CAMPUS".
+```{r}
+univ_calif_final %>% 
+  separate(instnm,into = c("univ","campus"),sep="-")
+```
 
 9. The column `ADM_RATE` is the admissions rate by campus. Which UC has the lowest and highest admissions rates? Produce a numerical summary and an appropriate plot.
+```{r}
+univ_calif_final %>% 
+  separate(instnm,into = c("univ","campus"),sep="-") %>% 
+  group_by(campus) %>% 
+  summarise(total_admission=sum(adm_rate)) %>% 
+  arrange(desc(total_admission))
+```
+From the numerical summary shown above, the campus with the highest admission rate is UC Riverside, and the campus with the lowest admission rate is UC Berkeley. 
 
-10. If you wanted to get a degree in biological or biomedical sciences, which campus confers the majority of these degrees? Produce a numerical summary and an appropriate plot.
+```{r}
+univ_calif_final %>% 
+  separate(instnm,into = c("univ","campus"),sep="-") %>% 
+  group_by(campus) %>% 
+  summarise(total_admission=sum(adm_rate)) %>% 
+  arrange(desc(total_admission)) %>% 
+  ggplot(aes(y=campus,x=total_admission)) +
+  geom_col()
+```
+
+10. If you wanted to get a degree in biological or biomedical sciences, which campus confers the majority of these degrees? Produce a numerical summary and an appropriate plot. (Using the PCIP26 vairable)
+```{r}
+univ_calif_final %>% 
+  separate(instnm,into = c("univ","campus"),sep="-") %>% 
+  group_by(campus) %>% 
+  summarise(total_bio_degrees=sum(pcip26)) %>% 
+  arrange(desc(total_bio_degrees))
+```
+From the numerical summary above, we see that UC San Diego, of the UCs, has the highest majority of biological or biomedical science degrees. 
+
+```{r}
+univ_calif_final %>% 
+  separate(instnm,into = c("univ","campus"),sep="-") %>% 
+  group_by(campus) %>% 
+  summarise(total_bio_degrees=sum(pcip26)) %>% 
+  ggplot(aes(y=campus,x=total_bio_degrees))+
+  geom_col()
+```
+
 
 ## Knit Your Output and Post to [GitHub](https://github.com/FRS417-DataScienceBiologists)

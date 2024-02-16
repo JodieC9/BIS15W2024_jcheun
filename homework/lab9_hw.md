@@ -5,7 +5,7 @@ date: "2024-02-15"
 output:
   html_document: 
     theme: spacelab
-    keep_md: yes
+    keep_md: true
 ---
 
 
@@ -121,6 +121,8 @@ colleges
 ## # ℹ 331 more rows
 ## # ℹ 1 more variable: pftftug1_ef <dbl>
 ```
+Note that the colleges included in this data set are all in CA.  
+
 
 ```r
 sum(is.na(colleges))
@@ -163,24 +165,280 @@ LA has the highest number of colleges with 24.
 
 3. Based on your answer to #2, make a plot that shows the number of colleges in the top 10 cities.
 
+```r
+colleges %>% 
+  count(city) %>% 
+  top_n(10,n) %>% 
+  ggplot(aes(y=city, x=n))+
+  geom_col()
+```
 
+![](lab9_hw_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+Putting the cities on the y-axis (instead of the x-axis) makes it easier to read the different city names. 
 
 4. The column `COSTT4_A` is the annual cost of each institution. Which city has the highest average cost? Where is it located?
 
+```r
+colleges %>%
+  group_by(city,instnm) %>% 
+  summarise(mean_cost=mean(costt4_a,na.rm=T)) %>% 
+  arrange(desc(mean_cost))
+```
+
+```
+## `summarise()` has grouped output by 'city'. You can override using the
+## `.groups` argument.
+```
+
+```
+## # A tibble: 341 × 3
+## # Groups:   city [161]
+##    city          instnm                                        mean_cost
+##    <chr>         <chr>                                             <dbl>
+##  1 Claremont     Harvey Mudd College                               69355
+##  2 Los Angeles   Southern California Institute of Architecture     67225
+##  3 Los Angeles   University of Southern California                 67064
+##  4 Los Angeles   Occidental College                                67046
+##  5 Claremont     Claremont McKenna College                         66325
+##  6 Malibu        Pepperdine University                             66152
+##  7 Claremont     Scripps College                                   66060
+##  8 Claremont     Pitzer College                                    65880
+##  9 San Francisco San Francisco Art Institute                       65453
+## 10 Claremont     Pomona College                                    64870
+## # ℹ 331 more rows
+```
+The Harvey Mudd College located in Claremont city had the highest mean annual cost of attendance at 66498. This city is located in CA. 
+
 5. Based on your answer to #4, make a plot that compares the cost of the individual colleges in the most expensive city. Bonus! Add UC Davis here to see how it compares :>).
+
+Code alone: 
+
+```r
+colleges %>% 
+  filter(city=="Claremont") %>% 
+  group_by(city, instnm) %>% 
+  summarise(total_cost=sum(costt4_a,rm.na=T)) %>% 
+  arrange(desc(total_cost)) 
+```
+
+```
+## `summarise()` has grouped output by 'city'. You can override using the
+## `.groups` argument.
+```
+
+```
+## # A tibble: 7 × 3
+## # Groups:   city [1]
+##   city      instnm                        total_cost
+##   <chr>     <chr>                              <dbl>
+## 1 Claremont Harvey Mudd College                69356
+## 2 Claremont Claremont McKenna College          66326
+## 3 Claremont Scripps College                    66061
+## 4 Claremont Pitzer College                     65881
+## 5 Claremont Pomona College                     64871
+## 6 Claremont Claremont Graduate University         NA
+## 7 Claremont Claremont School of Theology          NA
+```
+Resulting plot (and adding UCD): 
+
+```r
+colleges %>% 
+  filter(city=="Claremont") %>% 
+  group_by(city, instnm) %>% 
+  summarise(total_cost=sum(costt4_a,rm.na=T)) %>% 
+  arrange(desc(total_cost)) %>% 
+  ggplot(aes(y=instnm,x=total_cost))+
+  geom_col(,na.rm = T)
+```
+
+```
+## `summarise()` has grouped output by 'city'. You can override using the
+## `.groups` argument.
+```
+
+```
+## Warning: Removed 2 rows containing missing values (`position_stack()`).
+```
+
+![](lab9_hw_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+Note to self: Missing the inclusion of Davis in the above data^^
 
 6. The column `ADM_RATE` is the admissions rate by college and `C150_4_POOLED` is the four-year completion rate. Use a scatterplot to show the relationship between these two variables. What do you think this means?
 
+```r
+colleges %>% 
+  ggplot(aes(x=adm_rate,y=c150_4_pooled))+
+  geom_point()+
+  geom_smooth(method = lm,se=T)
+```
+
+```
+## `geom_smooth()` using formula = 'y ~ x'
+```
+
+```
+## Warning: Removed 251 rows containing non-finite values (`stat_smooth()`).
+```
+
+```
+## Warning: Removed 251 rows containing missing values (`geom_point()`).
+```
+
+![](lab9_hw_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+In the plot shown above, we see there is a negative relationship between college admission rate and 4 year completion rate. The higher the admission rate, the lower the overall 4 year completion rate. On the other hand, the lower the admission rate, the higher the 4 year completion rate. 
+
+
 7. Is there a relationship between cost and four-year completion rate? (You don't need to do the stats, just produce a plot). What do you think this means?
+
+```r
+colleges %>% 
+  ggplot(aes(x=adm_rate,y=costt4_a))+
+  geom_point()+
+  geom_smooth(method = lm,se=T)
+```
+
+```
+## `geom_smooth()` using formula = 'y ~ x'
+```
+
+```
+## Warning: Removed 249 rows containing non-finite values (`stat_smooth()`).
+```
+
+```
+## Warning: Removed 249 rows containing missing values (`geom_point()`).
+```
+
+![](lab9_hw_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+No, there does not seem to be a relationship between admission rate and cost of attendance. As shown in the plot above, the data points between these axis are highly variable with no clear increasing or decreasing trend. 
 
 8. The column titled `INSTNM` is the institution name. We are only interested in the University of California colleges. Make a new data frame that is restricted to UC institutions. You can remove `Hastings College of Law` and `UC San Francisco` as we are only interested in undergraduate institutions.
 
+```r
+uc_colleges <- colleges %>% 
+  select(instnm,city,stabbr,zip,adm_rate,sat_avg,pcip26,costt4_a,c150_4_pooled,pftftug1_ef) %>% 
+  filter(instnm=="University of California-San Diego" | instnm=="University of California-Irvine" | instnm== "University of California-Riverside" | instnm== "University of California-Los Angeles" | instnm =="University of California-Davis" | instnm=="University of California-Santa Cruz" |instnm== "University of California-Santa Barbara" | instnm== "University of California-Berkeley")
+uc_colleges
+```
+
+```
+## # A tibble: 8 × 10
+##   instnm       city  stabbr zip   adm_rate sat_avg pcip26 costt4_a c150_4_pooled
+##   <chr>        <chr> <chr>  <chr>    <dbl>   <dbl>  <dbl>    <dbl>         <dbl>
+## 1 University … La J… CA     92093    0.357    1324  0.216    31043         0.872
+## 2 University … Irvi… CA     92697    0.406    1206  0.107    31198         0.876
+## 3 University … Rive… CA     92521    0.663    1078  0.149    31494         0.73 
+## 4 University … Los … CA     9009…    0.180    1334  0.155    33078         0.911
+## 5 University … Davis CA     9561…    0.423    1218  0.198    33904         0.850
+## 6 University … Sant… CA     9506…    0.578    1201  0.193    34608         0.776
+## 7 University … Berk… CA     94720    0.169    1422  0.105    34924         0.916
+## 8 University … Sant… CA     93106    0.358    1281  0.108    34998         0.816
+## # ℹ 1 more variable: pftftug1_ef <dbl>
+```
+
 Remove `Hastings College of Law` and `UC San Francisco` and store the final data frame as a new object `univ_calif_final`.
+
+```r
+univ_calif_final<- uc_colleges 
+```
+Since I manually selected which colleges to include in the filter function, the `Hastings College of Law` and `UC San Francisco` colleges are not included, and hence do not to be removed from the pre-existing `uc_colleges` object. 
 
 Use `separate()` to separate institution name into two new columns "UNIV" and "CAMPUS".
 
+```r
+univ_calif_final %>% 
+  separate(instnm,into = c("univ","campus"),sep="-")
+```
+
+```
+## # A tibble: 8 × 11
+##   univ  campus city  stabbr zip   adm_rate sat_avg pcip26 costt4_a c150_4_pooled
+##   <chr> <chr>  <chr> <chr>  <chr>    <dbl>   <dbl>  <dbl>    <dbl>         <dbl>
+## 1 Univ… San D… La J… CA     92093    0.357    1324  0.216    31043         0.872
+## 2 Univ… Irvine Irvi… CA     92697    0.406    1206  0.107    31198         0.876
+## 3 Univ… River… Rive… CA     92521    0.663    1078  0.149    31494         0.73 
+## 4 Univ… Los A… Los … CA     9009…    0.180    1334  0.155    33078         0.911
+## 5 Univ… Davis  Davis CA     9561…    0.423    1218  0.198    33904         0.850
+## 6 Univ… Santa… Sant… CA     9506…    0.578    1201  0.193    34608         0.776
+## 7 Univ… Berke… Berk… CA     94720    0.169    1422  0.105    34924         0.916
+## 8 Univ… Santa… Sant… CA     93106    0.358    1281  0.108    34998         0.816
+## # ℹ 1 more variable: pftftug1_ef <dbl>
+```
+
 9. The column `ADM_RATE` is the admissions rate by campus. Which UC has the lowest and highest admissions rates? Produce a numerical summary and an appropriate plot.
 
-10. If you wanted to get a degree in biological or biomedical sciences, which campus confers the majority of these degrees? Produce a numerical summary and an appropriate plot.
+```r
+univ_calif_final %>% 
+  separate(instnm,into = c("univ","campus"),sep="-") %>% 
+  group_by(campus) %>% 
+  summarise(total_admission=sum(adm_rate)) %>% 
+  arrange(desc(total_admission))
+```
+
+```
+## # A tibble: 8 × 2
+##   campus        total_admission
+##   <chr>                   <dbl>
+## 1 Riverside               0.663
+## 2 Santa Cruz              0.578
+## 3 Davis                   0.423
+## 4 Irvine                  0.406
+## 5 Santa Barbara           0.358
+## 6 San Diego               0.357
+## 7 Los Angeles             0.180
+## 8 Berkeley                0.169
+```
+From the numerical summary shown above, the campus with the highest admission rate is UC Riverside, and the campus with the lowest admission rate is UC Berkeley. 
+
+
+```r
+univ_calif_final %>% 
+  separate(instnm,into = c("univ","campus"),sep="-") %>% 
+  group_by(campus) %>% 
+  summarise(total_admission=sum(adm_rate)) %>% 
+  arrange(desc(total_admission)) %>% 
+  ggplot(aes(y=campus,x=total_admission)) +
+  geom_col()
+```
+
+![](lab9_hw_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
+
+10. If you wanted to get a degree in biological or biomedical sciences, which campus confers the majority of these degrees? Produce a numerical summary and an appropriate plot. (Using the PCIP26 vairable)
+
+```r
+univ_calif_final %>% 
+  separate(instnm,into = c("univ","campus"),sep="-") %>% 
+  group_by(campus) %>% 
+  summarise(total_bio_degrees=sum(pcip26)) %>% 
+  arrange(desc(total_bio_degrees))
+```
+
+```
+## # A tibble: 8 × 2
+##   campus        total_bio_degrees
+##   <chr>                     <dbl>
+## 1 San Diego                 0.216
+## 2 Davis                     0.198
+## 3 Santa Cruz                0.193
+## 4 Los Angeles               0.155
+## 5 Riverside                 0.149
+## 6 Santa Barbara             0.108
+## 7 Irvine                    0.107
+## 8 Berkeley                  0.105
+```
+From the numerical summary above, we see that UC San Diego, of the UCs, has the highest majority of biological or biomedical science degrees. 
+
+
+```r
+univ_calif_final %>% 
+  separate(instnm,into = c("univ","campus"),sep="-") %>% 
+  group_by(campus) %>% 
+  summarise(total_bio_degrees=sum(pcip26)) %>% 
+  ggplot(aes(y=campus,x=total_bio_degrees))+
+  geom_col()
+```
+
+![](lab9_hw_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+
 
 ## Knit Your Output and Post to [GitHub](https://github.com/FRS417-DataScienceBiologists)
