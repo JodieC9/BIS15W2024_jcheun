@@ -1,7 +1,7 @@
 ---
 title: "Homework 9"
 author: "Jodie Cheun"
-date: "2024-02-15"
+date: "2024-02-20"
 output:
   html_document: 
     theme: spacelab
@@ -121,7 +121,28 @@ colleges
 ## # ℹ 331 more rows
 ## # ℹ 1 more variable: pftftug1_ef <dbl>
 ```
-Note that the colleges included in this data set are all in CA.  
+Note that the colleges included in this data set are all in CA.  This data does appear to be tidy as each column name is not representative of specific data and each row/observation is unique. 
+
+
+```r
+miss_var_summary(colleges)
+```
+
+```
+## # A tibble: 10 × 3
+##    variable      n_miss pct_miss
+##    <chr>          <int>    <dbl>
+##  1 sat_avg          276     80.9
+##  2 adm_rate         240     70.4
+##  3 c150_4_pooled    221     64.8
+##  4 costt4_a         124     36.4
+##  5 pftftug1_ef       53     15.5
+##  6 pcip26            35     10.3
+##  7 instnm             0      0  
+##  8 city               0      0  
+##  9 stabbr             0      0  
+## 10 zip                0      0
+```
 
 
 ```r
@@ -161,7 +182,7 @@ colleges %>%
 ## 10 Irvine                 5
 ## # ℹ 149 more rows
 ```
-LA has the highest number of colleges with 24. 
+LA has the highest number of distinct colleges at 24 counts. 
 
 3. Based on your answer to #2, make a plot that shows the number of colleges in the top 10 cities.
 
@@ -173,7 +194,7 @@ colleges %>%
   geom_col()
 ```
 
-![](lab9_hw_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](lab9_hw_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 Putting the cities on the y-axis (instead of the x-axis) makes it easier to read the different city names. 
 
 4. The column `COSTT4_A` is the annual cost of each institution. Which city has the highest average cost? Where is it located?
@@ -207,7 +228,7 @@ colleges %>%
 ## 10 Claremont     Pomona College                                    64870
 ## # ℹ 331 more rows
 ```
-The Harvey Mudd College located in Claremont city had the highest mean annual cost of attendance at 66498. This city is located in CA. 
+The Harvey Mudd College located in Claremont city had the highest mean annual cost of attendance at 69355. This city is located in CA. 
 
 5. Based on your answer to #4, make a plot that compares the cost of the individual colleges in the most expensive city. Bonus! Add UC Davis here to see how it compares :>).
 
@@ -243,12 +264,12 @@ Resulting plot (and adding UCD):
 
 ```r
 colleges %>% 
-  filter(city=="Claremont") %>% 
+  filter(city=="Claremont" | city=="Davis") %>% 
   group_by(city, instnm) %>% 
   summarise(total_cost=sum(costt4_a,rm.na=T)) %>% 
   arrange(desc(total_cost)) %>% 
   ggplot(aes(y=instnm,x=total_cost))+
-  geom_col(,na.rm = T)
+  geom_col()
 ```
 
 ```
@@ -260,8 +281,7 @@ colleges %>%
 ## Warning: Removed 2 rows containing missing values (`position_stack()`).
 ```
 
-![](lab9_hw_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
-Note to self: Missing the inclusion of Davis in the above data^^
+![](lab9_hw_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
 
 6. The column `ADM_RATE` is the admissions rate by college and `C150_4_POOLED` is the four-year completion rate. Use a scatterplot to show the relationship between these two variables. What do you think this means?
 
@@ -284,7 +304,7 @@ colleges %>%
 ## Warning: Removed 251 rows containing missing values (`geom_point()`).
 ```
 
-![](lab9_hw_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+![](lab9_hw_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
 In the plot shown above, we see there is a negative relationship between college admission rate and 4 year completion rate. The higher the admission rate, the lower the overall 4 year completion rate. On the other hand, the lower the admission rate, the higher the 4 year completion rate. 
 
 
@@ -309,7 +329,7 @@ colleges %>%
 ## Warning: Removed 249 rows containing missing values (`geom_point()`).
 ```
 
-![](lab9_hw_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+![](lab9_hw_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 No, there does not seem to be a relationship between admission rate and cost of attendance. As shown in the plot above, the data points between these axis are highly variable with no clear increasing or decreasing trend. 
 
 8. The column titled `INSTNM` is the institution name. We are only interested in the University of California colleges. Make a new data frame that is restricted to UC institutions. You can remove `Hastings College of Law` and `UC San Francisco` as we are only interested in undergraduate institutions.
@@ -401,7 +421,7 @@ univ_calif_final %>%
   geom_col()
 ```
 
-![](lab9_hw_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
+![](lab9_hw_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
 
 10. If you wanted to get a degree in biological or biomedical sciences, which campus confers the majority of these degrees? Produce a numerical summary and an appropriate plot. (Using the PCIP26 vairable)
 
@@ -426,7 +446,7 @@ univ_calif_final %>%
 ## 7 Irvine                    0.107
 ## 8 Berkeley                  0.105
 ```
-From the numerical summary above, we see that UC San Diego, of the UCs, has the highest majority of biological or biomedical science degrees. 
+From the numerical summary above, we see that UC San Diego, of all the UC schools, has the highest majority of biological or biomedical science degrees. 
 
 
 ```r
@@ -438,7 +458,6 @@ univ_calif_final %>%
   geom_col()
 ```
 
-![](lab9_hw_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
-
+![](lab9_hw_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
 
 ## Knit Your Output and Post to [GitHub](https://github.com/FRS417-DataScienceBiologists)

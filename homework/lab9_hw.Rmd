@@ -55,7 +55,11 @@ str(colleges)
 ```{r}
 colleges
 ```
-Note that the colleges included in this data set are all in CA.  
+Note that the colleges included in this data set are all in CA.  This data does appear to be tidy as each column name is not representative of specific data and each row/observation is unique. 
+
+```{r}
+miss_var_summary(colleges)
+```
 
 ```{r}
 sum(is.na(colleges))
@@ -72,7 +76,7 @@ colleges %>%
   summarise(n_colleges=n_distinct(instnm)) %>% 
   arrange(desc(n_colleges))
 ```
-LA has the highest number of colleges with 24. 
+LA has the highest number of distinct colleges at 24 counts. 
 
 3. Based on your answer to #2, make a plot that shows the number of colleges in the top 10 cities.
 ```{r}
@@ -91,7 +95,7 @@ colleges %>%
   summarise(mean_cost=mean(costt4_a,na.rm=T)) %>% 
   arrange(desc(mean_cost))
 ```
-The Harvey Mudd College located in Claremont city had the highest mean annual cost of attendance at 66498. This city is located in CA. 
+The Harvey Mudd College located in Claremont city had the highest mean annual cost of attendance at 69355. This city is located in CA. 
 
 5. Based on your answer to #4, make a plot that compares the cost of the individual colleges in the most expensive city. Bonus! Add UC Davis here to see how it compares :>).
 
@@ -106,14 +110,13 @@ colleges %>%
 Resulting plot (and adding UCD): 
 ```{r}
 colleges %>% 
-  filter(city=="Claremont") %>% 
+  filter(city=="Claremont" | city=="Davis") %>% 
   group_by(city, instnm) %>% 
   summarise(total_cost=sum(costt4_a,rm.na=T)) %>% 
   arrange(desc(total_cost)) %>% 
   ggplot(aes(y=instnm,x=total_cost))+
-  geom_col(,na.rm = T)
+  geom_col()
 ```
-Note to self: Missing the inclusion of Davis in the above data^^
 
 6. The column `ADM_RATE` is the admissions rate by college and `C150_4_POOLED` is the four-year completion rate. Use a scatterplot to show the relationship between these two variables. What do you think this means?
 ```{r}
@@ -182,7 +185,7 @@ univ_calif_final %>%
   summarise(total_bio_degrees=sum(pcip26)) %>% 
   arrange(desc(total_bio_degrees))
 ```
-From the numerical summary above, we see that UC San Diego, of the UCs, has the highest majority of biological or biomedical science degrees. 
+From the numerical summary above, we see that UC San Diego, of all the UC schools, has the highest majority of biological or biomedical science degrees. 
 
 ```{r}
 univ_calif_final %>% 
@@ -192,6 +195,5 @@ univ_calif_final %>%
   ggplot(aes(y=campus,x=total_bio_degrees))+
   geom_col()
 ```
-
 
 ## Knit Your Output and Post to [GitHub](https://github.com/FRS417-DataScienceBiologists)
