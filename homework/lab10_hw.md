@@ -1,7 +1,7 @@
 ---
 title: "Homework 10"
 author: "Jodie Cheun"
-date: "2024-02-20"
+date: "2024-02-21"
 output:
   html_document: 
     theme: spacelab
@@ -87,6 +87,12 @@ summary(deserts)
 ```
 
 ```r
+deserts <- deserts %>% 
+  replace_with_na(replace = list(species="sp."))
+```
+
+
+```r
 miss_var_summary(deserts)
 ```
 
@@ -94,19 +100,19 @@ miss_var_summary(deserts)
 ## # A tibble: 13 × 3
 ##    variable        n_miss pct_miss
 ##    <chr>            <int>    <dbl>
-##  1 hindfoot_length   3348     9.62
-##  2 weight            2503     7.20
-##  3 sex               1748     5.03
-##  4 record_id            0     0   
-##  5 month                0     0   
-##  6 day                  0     0   
-##  7 year                 0     0   
-##  8 plot_id              0     0   
-##  9 species_id           0     0   
-## 10 genus                0     0   
-## 11 species              0     0   
-## 12 taxa                 0     0   
-## 13 plot_type            0     0
+##  1 hindfoot_length   3348    9.62 
+##  2 weight            2503    7.20 
+##  3 sex               1748    5.03 
+##  4 species             86    0.247
+##  5 record_id            0    0    
+##  6 month                0    0    
+##  7 day                  0    0    
+##  8 year                 0    0    
+##  9 plot_id              0    0    
+## 10 species_id           0    0    
+## 11 genus                0    0    
+## 12 taxa                 0    0    
+## 13 plot_type            0    0
 ```
 
 ```r
@@ -225,7 +231,7 @@ deserts %>%
   theme(plot.title=element_text(size=rel(1.5),hjust=0.5))
 ```
 
-![](lab10_hw_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+![](lab10_hw_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
 Among the studied taxa, we can see rodents are the most abundantly studied. 
 
 4. For the taxa included in the study, use the fill option to show the proportion of individuals sampled by `plot_type.`
@@ -242,7 +248,7 @@ deserts %>%
   theme(plot.title=element_text(size=rel(1.5),hjust=0.5))
 ```
 
-![](lab10_hw_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+![](lab10_hw_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 While crowded, we can see the abundance of purple bars that represent the rodent taxa in comparison to the other taxa, indicating it to be the most highly studied taxa within the studied species. 
 
 5. What is the range of weight for each species included in the study? Remove any observations of weight that are NA so they do not show up in the plot.
@@ -260,7 +266,7 @@ deserts %>%
   theme(plot.title=element_text(size=rel(1.5),hjust=0.5))
 ```
 
-![](lab10_hw_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+![](lab10_hw_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
 
 6. Add another layer to your answer from #5 using `geom_point` to get an idea of how many measurements were taken for each species.
 
@@ -275,7 +281,7 @@ deserts %>%
   theme(plot.title=element_text(size=rel(1.5),hjust=0.5))
 ```
 
-![](lab10_hw_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
+![](lab10_hw_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
 
 7. [Dipodomys merriami](https://en.wikipedia.org/wiki/Merriam's_kangaroo_rat) is the most frequently sampled animal in the study. How have the number of observations of this species changed over the years included in the study?
 
@@ -303,23 +309,25 @@ deserts %>%
   theme(axis.text.x = element_text(angle=45, hjust=1))+
   labs(title = "DM Observations per Year",
        x="Number of Observations",
-       y= "Year")
+       y= "Year")+
+   theme(plot.title=element_text(size=rel(1.5),hjust=0.5))
 ```
 
-![](lab10_hw_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
+![](lab10_hw_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
 
 8. What is the relationship between `weight` and `hindfoot` length? Consider whether or not over plotting is an issue.
 
 ```r
 deserts %>% 
-  ggplot(aes(x=weight,y=hindfoot_length))+
-  geom_point(na.rm=T,size=1.2)+
+  ggplot(aes(x=weight,y=hindfoot_length, color=species))+
+  geom_point(na.rm=T,size=0.5)+
   geom_smooth(method=lm,se=F)+
   scale_y_log10()+
    theme(axis.text.x = element_text(angle=45, hjust=1))+
   labs(title = "Weight and Hindfoot Length",
        x="Weight",
-       y= "Hindfoot Length")
+       y= "Hindfoot Length")+
+   theme(plot.title=element_text(size=rel(1.5),hjust=0.5))
 ```
 
 ```
@@ -330,7 +338,7 @@ deserts %>%
 ## Warning: Removed 4048 rows containing non-finite values (`stat_smooth()`).
 ```
 
-![](lab10_hw_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
+![](lab10_hw_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
 Over plotting is an issue with the data. Even with the the log10 scaling, the use of `jitter` instead of `point` to introduce random data into the plot, and making each plot point smaller each of the data points are still close together. Still, we are able to see a general pattern and relationship between the data points form. From this, we can see that hindfoot length will increase with weight, but when a weight of 100 is reached, corresponding hindfoot length will not increase. 
 
 9. Which two species have, on average, the highest weight? Once you have identified them, make a new column that is a ratio of `weight` to `hindfoot_length`. Make a plot that shows the range of this new ratio and fill by sex.
@@ -384,11 +392,12 @@ deserts %>%
   geom_boxplot()+
   theme(axis.text.x = element_text(angle=45, hjust=1))+
   labs(title = "Weight to Foot Ratios",
-       x="Ratio")
+       x="Ratio")+
+   theme(plot.title=element_text(size=rel(1.5),hjust=0.5))
 ```
 
-![](lab10_hw_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
-Note: When specifying the NA exclusions from the data, we must use the `and` command and not the `or` command, because we only want to plot data that does not contain NA values for any of the 3 variables we are interested in plotting. Also, finding the range of variables corresponds to boxplots! 
+![](lab10_hw_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
+Note to self: When specifying the NA exclusions from the data, we must use the `and` command and not the `or` command, because we only want to plot data that does not contain NA values for any of the 3 variables we are interested in plotting. Also, finding the range of variables corresponds to boxplots! 
 
 10. Make one plot of your choice! Make sure to include at least two of the aesthetics options you have learned.
 
@@ -403,6 +412,7 @@ names(deserts)
 ## [13] "plot_type"
 ```
 
+
 ```r
 options(scipen=999)
 ```
@@ -413,19 +423,22 @@ deserts %>%
  filter(taxa=="Rodent") %>% 
   filter(plot_type == "Control") %>% 
   filter(!sex== "NA") %>% 
-  ggplot(aes(x=species,y=weight,fill=sex))+
+  ggplot(aes(x=species,y=hindfoot_length,fill=sex))+
   geom_boxplot(alpha=0.4)+
   scale_y_log10()+
-  coord_flip()
+  coord_flip()+
+  labs(title = "Range of Hindfoot Length per Species",
+       x="Species",
+       y= "Hindfoot Length")+
+   theme(plot.title=element_text(size=rel(1.5),hjust=0.5))
 ```
 
 ```
-## Warning: Removed 407 rows containing non-finite values (`stat_boxplot()`).
+## Warning: Removed 723 rows containing non-finite values (`stat_boxplot()`).
 ```
 
-![](lab10_hw_files/figure-html/unnamed-chunk-24-1.png)<!-- -->
-There are multiple taxa in this data, but for some reason only `rodent` is the only taxa that is working with this code. Why? Shouldnt this code work with any taxa I want it to? 
-
+![](lab10_hw_files/figure-html/unnamed-chunk-25-1.png)<!-- -->
+There are multiple taxa (such as Bird or Rabbit) in this data, but for some reason only `rodent` is the only taxa that is working with this code, the table ends up going blank with no data/plot showing at all.  Why? Shouldnt this code work with any taxa I want it to? 
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences. 

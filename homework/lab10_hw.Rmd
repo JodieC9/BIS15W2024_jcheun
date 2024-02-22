@@ -39,6 +39,11 @@ names(deserts)
 summary(deserts)
 ```
 ```{r}
+deserts <- deserts %>% 
+  replace_with_na(replace = list(species="sp."))
+```
+
+```{r}
 miss_var_summary(deserts)
 ```
 ```{r}
@@ -149,20 +154,22 @@ deserts %>%
   theme(axis.text.x = element_text(angle=45, hjust=1))+
   labs(title = "DM Observations per Year",
        x="Number of Observations",
-       y= "Year")
+       y= "Year")+
+   theme(plot.title=element_text(size=rel(1.5),hjust=0.5))
 ```
 
 8. What is the relationship between `weight` and `hindfoot` length? Consider whether or not over plotting is an issue.
 ```{r}
 deserts %>% 
-  ggplot(aes(x=weight,y=hindfoot_length))+
-  geom_point(na.rm=T,size=1.2)+
+  ggplot(aes(x=weight,y=hindfoot_length, color=species))+
+  geom_point(na.rm=T,size=0.5)+
   geom_smooth(method=lm,se=F)+
   scale_y_log10()+
    theme(axis.text.x = element_text(angle=45, hjust=1))+
   labs(title = "Weight and Hindfoot Length",
        x="Weight",
-       y= "Hindfoot Length")
+       y= "Hindfoot Length")+
+   theme(plot.title=element_text(size=rel(1.5),hjust=0.5))
 ```
 Over plotting is an issue with the data. Even with the the log10 scaling, the use of `jitter` instead of `point` to introduce random data into the plot, and making each plot point smaller each of the data points are still close together. Still, we are able to see a general pattern and relationship between the data points form. From this, we can see that hindfoot length will increase with weight, but when a weight of 100 is reached, corresponding hindfoot length will not increase. 
 
@@ -190,14 +197,16 @@ deserts %>%
   geom_boxplot()+
   theme(axis.text.x = element_text(angle=45, hjust=1))+
   labs(title = "Weight to Foot Ratios",
-       x="Ratio")
+       x="Ratio")+
+   theme(plot.title=element_text(size=rel(1.5),hjust=0.5))
 ```
-Note: When specifying the NA exclusions from the data, we must use the `and` command and not the `or` command, because we only want to plot data that does not contain NA values for any of the 3 variables we are interested in plotting. Also, finding the range of variables corresponds to boxplots! 
+Note to self: When specifying the NA exclusions from the data, we must use the `and` command and not the `or` command, because we only want to plot data that does not contain NA values for any of the 3 variables we are interested in plotting. Also, finding the range of variables corresponds to boxplots! 
 
 10. Make one plot of your choice! Make sure to include at least two of the aesthetics options you have learned.
 ```{r}
 names(deserts)
 ```
+
 ```{r}
 options(scipen=999)
 ```
@@ -207,13 +216,16 @@ deserts %>%
  filter(taxa=="Rodent") %>% 
   filter(plot_type == "Control") %>% 
   filter(!sex== "NA") %>% 
-  ggplot(aes(x=species,y=weight,fill=sex))+
+  ggplot(aes(x=species,y=hindfoot_length,fill=sex))+
   geom_boxplot(alpha=0.4)+
   scale_y_log10()+
-  coord_flip()
+  coord_flip()+
+  labs(title = "Range of Hindfoot Length per Species",
+       x="Species",
+       y= "Hindfoot Length")+
+   theme(plot.title=element_text(size=rel(1.5),hjust=0.5))
 ```
-There are multiple taxa in this data, but for some reason only `rodent` is the only taxa that is working with this code. Why? Shouldnt this code work with any taxa I want it to? 
-
+There are multiple taxa (such as Bird or Rabbit) in this data, but for some reason only `rodent` is the only taxa that is working with this code, the table ends up going blank with no data/plot showing at all.  Why? Shouldnt this code work with any taxa I want it to? 
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences. 
