@@ -1,7 +1,7 @@
 ---
 title: "Homework 10"
 author: "Jodie Cheun"
-date: "2024-02-21"
+date: "2024-02-22"
 output:
   html_document: 
     theme: spacelab
@@ -419,6 +419,22 @@ options(scipen=999)
 
 
 ```r
+deserts %>% count(taxa)
+```
+
+```
+## # A tibble: 4 × 2
+##   taxa        n
+##   <chr>   <int>
+## 1 Bird      450
+## 2 Rabbit     75
+## 3 Reptile    14
+## 4 Rodent  34247
+```
+
+
+
+```r
 deserts %>% 
  filter(taxa=="Rodent") %>% 
   filter(plot_type == "Control") %>% 
@@ -437,8 +453,10 @@ deserts %>%
 ## Warning: Removed 723 rows containing non-finite values (`stat_boxplot()`).
 ```
 
-![](lab10_hw_files/figure-html/unnamed-chunk-25-1.png)<!-- -->
+![](lab10_hw_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
 There are multiple taxa (such as Bird or Rabbit) in this data, but for some reason only `rodent` is the only taxa that is working with this code, the table ends up going blank with no data/plot showing at all.  Why? Shouldnt this code work with any taxa I want it to? 
+
+OH Notes: The reason this code does not work with other taxa is because they do not contain the right information for the analysis you want to do. AKA, the hindfoot length is not going to be applicable to birds and the abundance of NA values for the sex of Bird and Rabbit makes us unable to form a boxplot in which NA values are excluded. Rodent is the only one that works here because it is the only taxa group with sufficient information to do this analysis. 
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences. 

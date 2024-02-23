@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jodie Cheun" />
 
-<meta name="date" content="2024-02-21" />
+<meta name="date" content="2024-02-22" />
 
 <title>Homework 10</title>
 
@@ -376,7 +376,7 @@ display: none;
 
 <h1 class="title toc-ignore">Homework 10</h1>
 <h4 class="author">Jodie Cheun</h4>
-<h4 class="date">2024-02-21</h4>
+<h4 class="date">2024-02-22</h4>
 
 </div>
 
@@ -710,6 +710,14 @@ the aesthetics options you have learned.</li>
 ##  [9] &quot;weight&quot;          &quot;genus&quot;           &quot;species&quot;         &quot;taxa&quot;           
 ## [13] &quot;plot_type&quot;</code></pre>
 <pre class="r"><code>options(scipen=999)</code></pre>
+<pre class="r"><code>deserts %&gt;% count(taxa)</code></pre>
+<pre><code>## # A tibble: 4 × 2
+##   taxa        n
+##   &lt;chr&gt;   &lt;int&gt;
+## 1 Bird      450
+## 2 Rabbit     75
+## 3 Reptile    14
+## 4 Rodent  34247</code></pre>
 <pre class="r"><code>deserts %&gt;% 
  filter(taxa==&quot;Rodent&quot;) %&gt;% 
   filter(plot_type == &quot;Control&quot;) %&gt;% 
@@ -728,6 +736,13 @@ are multiple taxa (such as Bird or Rabbit) in this data, but for some
 reason only <code>rodent</code> is the only taxa that is working with
 this code, the table ends up going blank with no data/plot showing at
 all. Why? Shouldnt this code work with any taxa I want it to?</p>
+<p>OH Notes: The reason this code does not work with other taxa is
+because they do not contain the right information for the analysis you
+want to do. AKA, the hindfoot length is not going to be applicable to
+birds and the abundance of NA values for the sex of Bird and Rabbit
+makes us unable to form a boxplot in which NA values are excluded.
+Rodent is the only one that works here because it is the only taxa group
+with sufficient information to do this analysis.</p>
 </div>
 <div id="push-your-final-code-to-github" class="section level2">
 <h2>Push your final code to GitHub!</h2>
