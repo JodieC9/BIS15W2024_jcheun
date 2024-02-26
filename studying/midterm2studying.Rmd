@@ -1,0 +1,98 @@
+---
+title: "Practice"
+output: html_document
+date: "2024-02-26"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+```{r}
+#install.packages("tidyverse")
+library(tidyverse)
+```
+## Pivot_wider and Pivot_longer 
+
+```{r}
+names(Orange)
+```
+
+```{r}
+Orange
+```
+Orange is currently in the long form of the data and follows tidy verse conventions. Each observation has its own cell and the variables do not contain any information. 
+
+## Changing to wide data
+```{r}
+orange_wide <- Orange %>% 
+  pivot_wider(names_from = age, values_from = circumference)
+orange_wide
+```
+names_from is how we create the new column titles. We tell R which column to look at in the long version of the data. From the column we list, the observations of this column will become variables in the wide version of the chart. 
+
+values_from is how create the new observations. In the previous step we created new columns, but we have not specified what observations should go into this column. values_from is where we solve this issue. The column we specify in the values_from function will become the observations of the newly created variables in the names_from command done prior. 
+
+Notice that both of the commands in the pivot_wider function revolves around us taking ALREADY EXISTING variables to turn into new variables or observations. 
+
+```{r}
+orange_wide %>% 
+  pivot_longer(cols = 2:8,
+               names_to = "age",
+               values_to = "circumference")
+```
+
+Note that you can "separate" each component of the command by the same , but into different rows to make it easier to see! 
+
+col: critical to SPECIFY the columns of data you wish to manipulate. How else will names_to and values_to know where to grab the variables and observations from to tranform the data?
+
+names_to: specifying the name of the new column that will get populated with observations from the current variable titles 
+values_to: specifying the name of the column that will get populations from the current observations 
+
+
+
+Note that the pivot_longer commands revolve around us MAKING new columns that the current variables and observations in the wider version of the data are going to be transformed into stricly observations of the NEW columns we create. 
+
+## Facet_wrap and Facet_grid
+
+```{r}
+library(gapminder)
+```
+First make a scatter plot of GDP per Capita and Life expectancy with each dot separated by continent.
+```{r}
+names(gapminder)
+```
+
+```{r}
+gapminder %>% 
+  ggplot(aes(x= pop, y= life_exp,color=continent))+
+  geom_point(alpha=0.6)
+```
+
+While this graph separates the information by continent, it is not so useful in seeing distinctly, the separate trends from each. Here is where facet_wrap comes in.
+
+```{r}
+gapminder %>% 
+  ggplot(aes(x=gdp_percap, 
+             y= life_exp,
+             color=continent))+
+  geom_point(alpha=0.6)+
+  facet_wrap(~continent,
+             nrow = 5,
+             ncol=1 ,
+             strip.position = "bottom")
+```
+
+Note there is not problem in coloring and facet_wrapping by the same variable. Using facet wrap on the basis of continent separated each scatter plot by its continent. With the nrow and ncol details, we can specify the output of the facet plots. nrow refers to the number of plots we want to show in each row. ncol refers to the number of columns we want the plots to be distributed across. Make sure there are enough rows and columns to fit the expected output of the faceted graphs!!  
+
+```{r}
+gapminder %>% 
+  ggplot(aes(x=gdp_percap, y= life_exp,color=continent))+
+  geom_point(alpha=0.6)+
+  facet_grid(~continent)
+```
+
+If you want to facet your plots by more than one categorical variable, make sure the `~` is BETWEEN the 2 variables you wish to facet by. If you are only faceting by a single categorical variable, the `~` will go BEFORE the SINGLE variable you wish to facet by 
+
+Overall, facet wrap is a useful way to view an already made graph, under different categorical variables 

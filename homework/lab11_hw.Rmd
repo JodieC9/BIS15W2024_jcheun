@@ -3,9 +3,9 @@ title: "Lab 11 Homework"
 author: "Jodie Cheun"
 date: "`r Sys.Date()`"
 output:
-  html_document:
+  html_document: 
     theme: spacelab
-    toc: no
+    keep_md: true
 ---
 
 ```{r setup, include=FALSE}
@@ -213,22 +213,12 @@ gapminder %>%
 
 **10. Make one plot of your choice that uses faceting!**    
 ```{r}
-str(gapminder)
-```
-
-
-```{r}
 gapminder %>% 
-  mutate(year=as.factor(year)) %>% 
-  ggplot(aes(x=continent,y=life_exp,fill=continent))+
-  geom_boxplot(na.rm=T,alpha=0.5)+
-  labs(title= "Range of Life Expectancy",
-       x="Continent",
-       y="Life Expectancy")+
-  facet_grid(.~life_exp)
+  ggplot(aes(x=gdp_percap, 
+             y= life_exp,
+             color=continent))+
+  geom_point(alpha=0.6)+
+  facet_wrap(~continent)
 ```
-
-
-
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences. 
