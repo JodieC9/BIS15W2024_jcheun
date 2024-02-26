@@ -33,25 +33,181 @@ surgery <- read_csv("data/surgery.csv")
 ```
 
 1. Use the summary function(s) of your choice to explore the data and get an idea of its structure. Please also check for NA's.
+```{r}
+names(surgery)
+```
+```{r}
+glimpse(surgery)
+```
+```{r}
+sum(is.na(surgery))
+```
+
+```{r}
+miss_var_summary(surgery)
+```
 
 2. Let's explore the participants in the study. Show a count of participants by race AND make a plot that visually represents your output.
+```{r}
+surgery %>% 
+  count(race) %>% 
+  arrange(desc(n))
+```
+
+```{r}
+surgery %>% 
+  ggplot(aes(x=race,fill=race))+
+  geom_bar(color="black",
+           alpha=0.6)+
+  labs(title = "Participants by Race",
+       x="Race",
+       y= "Number of Individuals")
+```
 
 3. What is the mean age of participants by gender? (hint: please provide a number for each) Since only three participants do not have gender indicated, remove these participants from the data.
+```{r}
+surgery %>% 
+  filter(gender!="NA") %>% 
+  group_by(gender) %>% 
+  summarise(mean_age=mean(age,na.rm=T))
+```
+
+```{r}
+surgery %>% 
+  filter(gender!="NA") %>% 
+  group_by(gender) %>% 
+  summarise(mean_age=mean(age,na.rm=T)) %>% 
+  ggplot(aes(x=gender,
+             y=mean_age,
+             fill=gender))+
+  geom_col(na.rm=T,
+           alpha=0.6,
+           color="black")+
+  labs(title= "Average Age per Gender",
+       x="Gender",
+       y="Average Age")
+```
 
 4. Make a plot that shows the range of age associated with gender.
+```{r}
+surgery %>%
+  filter(!gender=="NA") %>% 
+  ggplot(aes(x=gender,
+             y=age,
+             fill=gender))+
+  geom_boxplot(na.rm = T,
+               alpha=0.6)+
+  labs(title= "Age Range Gender",
+       x="Gender",
+       y="Age Range")
+```
+IMPORTANT: When using the `fill` function do NOT use "". Type the variable you wish to color by AS IS with no quotation marks or else R will not be able to recognize it 
 
 5. How healthy are the participants? The variable `asa_status` is an evaluation of patient physical status prior to surgery. Lower numbers indicate fewer comorbidities (presence of two or more diseases or medical conditions in a patient). Make a plot that compares the number of `asa_status` I-II, III, and IV-V.
 
+```{r}
+surgery %>%
+  filter(!gender =="NA") %>%
+  filter(!asa_status=="NA") %>%
+  ggplot(aes(x=asa_status,
+             fill=asa_status))+
+  geom_bar(na.rm=T,
+           alpha=0.6,
+           color="black")+
+  labs(title = "Health Status by Gender of Participants",
+       x= "Health Status",
+       y= "Number of Individuals")
+```
+
 6. Create a plot that displays the distribution of body mass index for each `asa_status` as a probability distribution- not a histogram. (hint: use faceting!)
+```{r}
+names(surgery)
+```
+
+```{r}
+surgery %>%
+  filter(!bmi=="NA") %>% 
+  filter(!asa_status=="NA") %>% 
+  filter(!gender=="NA") %>% 
+  ggplot(aes(x=bmi,
+             y=asa_status,
+             fill=gender))+
+  geom_boxplot(alpha=0.6)+
+  facet_wrap("asa_status")+
+  labs(title = "Distribution of BMI per Health Status",
+       x="BMI",
+       y="Health Status")
+```
 
 The variable `ccsmort30rate` is a measure of the overall 30-day mortality rate associated with each type of operation. The variable `ccscomplicationrate` is a measure of the 30-day in-hospital complication rate. The variable `ahrq_ccs` lists each type of operation.  
 
 7. What are the 5 procedures associated with highest risk of 30-day mortality AND how do they compare with the 5 procedures with highest risk of complication? (hint: no need for a plot here)
+```{r}
+surgery %>% 
+  select(ccsmort30rate,ccscomplicationrate,ahrq_ccs,gender) %>% 
+  group_by(ahrq_ccs) %>% 
+  summarise(total_mortality=sum(ccsmort30rate)) %>% 
+  arrange(desc(total_mortality))
+```
+All of the procedures that fall into the top 5 rates for highest complications are colorectal resection.
+*Wrong* If you just arrange each of the procedures you get repeats. You need to add up the complication rate for each recorded procedure and the compare the resulting totals 
 
 8. Make a plot that compares the `ccsmort30rate` for all listed `ahrq_ccs` procedures.
+```{r}
+surgery %>% 
+  filter(!gender =="NA") %>% 
+  ggplot(aes(x=ccsmort30rate,
+             y=ahrq_ccs,
+             fill=gender))+ 
+  geom_col(alpha=0.6)+
+  labs(title= "Medical Operations and 30 Day Mortality Rates",
+      x= "Mortality Rate",
+      y= "Medical Operation")
+```
 
 9. When is the best month to have surgery? Make a chart that shows the 30-day mortality and complications for the patients by month. `mort30` is the variable that shows whether or not a patient survived 30 days post-operation.
 
+```{r}
+surgery %>% 
+  filter(!gender =="NA") %>% 
+  select(ccsmort30rate,ccscomplicationrate,gender,month) %>% 
+  arrange(ccsmort30rate)
+```
+```{r}
+surgery %>% 
+  group_by(month) %>% 
+  summarise(ccsmort30rate_total=sum(ccsmort30rate)) %>% 
+  arrange(ccsmort30rate_total)
+```
+As shown above, the month with the lowest mortality rate after operation is December. 
+Because the mortality rate is also put in counts we can use table to get a measure 
+```{r}
+surgery %>% tabyl(month, mort30)
+```
+
+```{r}
+surgery %>% 
+  filter(!gender =="NA") %>% 
+  ggplot(aes(x=mort30,
+             y=ccscomplicationrate,
+             fill=gender))+
+  geom_boxplot(alpha=0.6)+
+  facet_wrap(~month)+
+  labs(title="Operation Complications and Survivors by Month",
+       x="Patient Survival",
+       y="Operation Complication Rate")
+```
+Whether the patient survives or not depends on month and gender. 
+
+
 10. Make a plot that visualizes the chart from question #9. Make sure that the months are on the x-axis. Do a search online and figure out how to order the months Jan-Dec.
+```{r}
+surgery %>% 
+  filter(!gender =="NA") %>% 
+  ggplot(aes(x=month,
+             y=ccsmort30rate))+
+  geom_col()+
+  scale_x_discrete(limits=c("Jan","Feb","Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")) #puts the months in chronological order 
+```
 
 Please be 100% sure your exam is saved, knitted, and pushed to your github repository. No need to submit a link on canvas, we will find your exam in your repository.
