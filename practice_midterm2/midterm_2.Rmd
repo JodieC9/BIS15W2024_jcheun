@@ -138,6 +138,8 @@ surgery %>%
        x="BMI",
        y="Health Status")
 ```
+Box plots do show a range, but are only showing differences on the x axis, nothing is shown on the y-axis
+Density shows differences along both axis 
 
 The variable `ccsmort30rate` is a measure of the overall 30-day mortality rate associated with each type of operation. The variable `ccscomplicationrate` is a measure of the 30-day in-hospital complication rate. The variable `ahrq_ccs` lists each type of operation.  
 
@@ -150,7 +152,9 @@ surgery %>%
   arrange(desc(total_mortality))
 ```
 All of the procedures that fall into the top 5 rates for highest complications are colorectal resection.
-*Wrong* If you just arrange each of the procedures you get repeats. You need to add up the complication rate for each recorded procedure and the compare the resulting totals 
+*Wrong* If you just arrange each of the procedures you get repeats observations of the same procedure. You need to add up the complication rate for each recorded procedure and the compare the resulting totals 
+
+Using mean is more accurate than taking the sum of something *Use mean for comparison problems*
 
 8. Make a plot that compares the `ccsmort30rate` for all listed `ahrq_ccs` procedures.
 ```{r}
