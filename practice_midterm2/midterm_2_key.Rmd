@@ -106,6 +106,7 @@ surgery %>%
   arrange(desc(ccsmort30rate)) %>% 
   slice_max(ccsmort30rate, n=5)
 ```
+Prof addresses the first part of the question with the mort rate 
 
 ```{r}
 surgery %>% 
@@ -114,6 +115,7 @@ surgery %>%
   arrange(desc(ccscomplicationrate)) %>% 
   slice_max(ccscomplicationrate, n=5)
 ```
+Prof addresses the second part of the question with the complication rate 
 
 ```{r}
 surgery %>% 
@@ -123,6 +125,7 @@ surgery %>%
   summarise(ccsmort30rate=mean(ccsmort30rate),
             ccscomplicationrate=mean(ccscomplicationrate))
 ```
+Now knowing the specific operations that correlated to the top 5 mort rates and complication rates we represent these in a single chart with the means of both rates PER procedure 
 
 8. Make a plot that compares the `ccsmort30rate` for all listed `ahrq_ccs` procedures.
 ```{r}

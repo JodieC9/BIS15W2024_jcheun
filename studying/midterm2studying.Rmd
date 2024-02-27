@@ -66,7 +66,7 @@ names(gapminder)
 
 ```{r}
 gapminder %>% 
-  ggplot(aes(x= gdp_percap, y= life_exp,color=continent))+
+  ggplot(aes(x= gdpPercap, y= lifeExp,color=continent))+
   geom_point(alpha=0.6)
 ```
 
@@ -96,3 +96,9 @@ gapminder %>%
 If you want to facet your plots by more than one categorical variable, make sure the `~` is BETWEEN the 2 variables you wish to facet by. If you are only faceting by a single categorical variable, the `~` will go BEFORE the SINGLE variable you wish to facet by 
 
 Overall, facet wrap is a useful way to view an already made graph, under different categorical variables 
+
+
+```{r}
+?top_n
+```
+
