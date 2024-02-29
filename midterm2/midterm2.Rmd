@@ -102,6 +102,7 @@ sharks %>%
   summarise(n_incidents=n_distinct(incident_num))
 ```
 Month 10 (aka October) is recorded to have the most distinct counts of incidents at 32. Yikes. 
+*Need to convert the month to a factor so R stops treating them as numbers* 
 
 *Plot*
 ```{r}
