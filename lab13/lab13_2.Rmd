@@ -2,10 +2,11 @@
 title: "Intro to Spatial Data"
 date: "`r Sys.Date()`"
 output:
-  html_document:
+  html_document: 
     theme: spacelab
     toc: yes
     toc_float: yes
+    keep_md: yes
   pdf_document:
     toc: yes
 ---
@@ -40,6 +41,8 @@ Start by making an account with [Stadia Maps](https://client.stadiamaps.com/sign
 ```{r}
 register_stadiamaps("e77f55a8-a371-44cd-a7dd-6384b4586d64", write = FALSE)
 ```
+Maps are not free. Companies want low volume use of their maps, you register an account so they give a key to access their maps. 
+
 
 ## Load the Data
 Let's load our processed data from the first part of the lab.
@@ -66,15 +69,16 @@ spiders %>%
 
 Now we set the bounding box. We use the min and max values for latitude and longitude to set the range.  
 ```{r}
-lat <- c(34.67, 41.80)
+lat <- c(34.67, 41.80) #enter the lat and long values based on the min and max from the summary function 
 long <- c(-124.1, -115.5)
-bbox <- make_bbox(long, lat, f = 0.03) #f is the fraction of the bounding box to add to the range
+bbox <- make_bbox(long, lat, f = 0.03) #f is the fraction of the bounding box to add to the range. Always going to be long first THEN lat .f is how we increase the map size output, start the 0.03
 ```
 
 Let's get a base map for our bounding box area. There are several different map [styles](https://docs.stadiamaps.com/themes/)
 ```{r}
 map1 <- get_stadiamap(bbox, maptype = "stamen_terrain", zoom=7)
 ```
+Zoom is a sensitive value, keep it at 7. 
 
 Have a look at the map.  
 ```{r}
@@ -88,6 +92,8 @@ ggmap(map1) +
   geom_point(data = spiders, aes(longitude, latitude), size=0.4) +
   labs(x= "Longitude", y= "Latitude", title="Spider Locations")
 ```
+Using geom_point bc we want specific points. Do not use pipes here. You end up with a map of where specific spiders were collected 
+
 
 ## Practice
 Let's use the shark attack data set from the second midterm and try to visualize where the attacks occurred. The [data](https://catalog.data.gov/dataset/shark-incident-database-california-56167) are from: State of California- Shark Incident Database.  
@@ -104,47 +110,67 @@ sharks_dups <- sharks %>%
   distinct(location, .keep_all = TRUE) # remove duplicate locations, but keep the remaining variables
 ```
 
-```{r}
-
-```
-
-```{r}
-
-```
-
 2. Load a map from `stamen` in a terrain style projection and display the map.
 ```{r}
-
+sharks_dups %>% 
+ distinct(location, .keep_all = T) %>% 
+  summary()
 ```
 
 ```{r}
-
+lat <- c(32.59, 41.56) 
+long <- c(-124.7, -117.1)
+bbox2 <- make_bbox(long, lat, f = 0.03)
 ```
+
+```{r}
+map2 <- get_stadiamap(bbox2, maptype = "stamen_terrain", zoom=7)
+```
+
+```{r}
+ggmap(map2)
+```
+
 
 3. Build a map that overlays the recorded observations of shark attacks in California.
 ```{r}
-
+ggmap(map2) + 
+  geom_point(data = sharks_dups, aes(longitude, latitude), size=0.8) +
+  labs(x= "Longitude", y= "Latitude", title="Shark Attacks!")
 ```
 
 4. What if you only wanted to map the fatalities?
 ```{r}
-
+sharks_fatal <- sharks_dups %>% 
+  filter(injury=="fatal")
+sharks_fatal
 ```
 
 ```{r}
+sharks_fatal %>% 
+ distinct(location, .keep_all = T) %>% #keeps distinct observations of the location 
+  summary()
+```
+```{r}
+?distinct
+```
 
+
+```{r}
+lat <- c(32.85, 39.58) 
+long <- c(-123.8, -117.3)
+bbox3 <- make_bbox(long, lat, f = 0.03)
 ```
 
 ```{r}
-
+map3 <- get_stadiamap(bbox3, maptype = "stamen_terrain", zoom=7)
 ```
+If you are having trouble with the map, reduce the zoom number
 
 ```{r}
-
-```
-
-```{r}
-
+ggmap(map2) + 
+  geom_point(data = sharks_dups, aes(longitude, latitude,color=injury), size=0.8) +
+  labs(x= "Longitude", y= "Latitude", title="Fatal Shark Attacks per Location")
 ```
 
 ## Wrap-up  
