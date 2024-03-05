@@ -1,11 +1,11 @@
 ---
 title: "Homework 12"
-author: "Please Add Your Name Here"
+author: "Jodie Cheun"
 date: "`r Sys.Date()`"
 output:
-  html_document:
+  html_document: 
     theme: spacelab
-    toc: no
+    keep_md: true
 ---
 
 ```{r setup, include=FALSE}
@@ -22,6 +22,7 @@ Make sure to use the formatting conventions of RMarkdown to make your report nea
 library(tidyverse)
 library(janitor)
 library(ggmap)
+library(naniar)
 ``` 
 
 ## Load the Data
@@ -33,24 +34,124 @@ We will use two separate data sets for this homework.
 
 1. Load the `grizzly` data and evaluate its structure.  
 
+```{r}
+grizzly <- read_csv("data/bear-sightings.csv") %>% clean_names()
+```
+
+```{r}
+names(grizzly)
+```
+
+```{r}
+glimpse(grizzly)
+```
+```{r}
+miss_var_summary(grizzly)
+```
+
 2. Use the range of the latitude and longitude to build an appropriate bounding box for your map. 
-3. Load a map from `stamen` in a terrain style projection and display the map.  
+```{r}
+summary(grizzly)
+```
+```{r}
+lat <- c(55.02,70.37)
+long <- c(-166.2,-131.3)
+bbox1 <- make_bbox(long,lat,f=0.03)
+```
+
+3. Load a map from `stamen` in a terrain style projection and display the map. 
+
+```{r}
+#register_stadiamaps(, write = FALSE)
+```
+
+```{r}
+map1 <- get_stadiamap(bbox1, maptype = "stamen_terrain", zoom=4)
+```
+
+```{r}
+ggmap(map1)
+```
 
 4. Build a final map that overlays the recorded observations of grizzly bears in Alaska.  
+```{r}
+ggmap(map1) +
+  geom_point(data = grizzly, aes(longitude, latitude),size=0.4)+
+  labs(title = "Grizzly Bear Locations in Alaska",
+       x="Longitude",
+       y="Latitude")
+```
 
 Let's switch to the wolves data. Brandell, Ellen E (2021), Serological dataset and R code for: Patterns and processes of pathogen exposure in gray wolves across North America, Dryad, [Dataset](https://doi.org/10.5061/dryad.5hqbzkh51).  
 
 5. Load the data and evaluate its structure.  
+```{r}
+wolves <- read_csv("data/wolves_data/wolves_dataset.csv") %>% clean_names()
+wolves
+```
 
-6. How many distinct wolf populations are included in this study? Mae a new object that restricts the data to the wolf populations in the lower 48 US states.  
+```{r}
+names(wolves)
+```
+```{r}
+glimpse(wolves)
+```
+```{r}
+miss_var_summary(wolves)
+```
+
+6. How many distinct wolf populations are included in this study? Make a new object that restricts the data to the wolf populations in the lower 48 US states. Note, the lower 48 states means we do not include Alaska and Hawaii
+```{r}
+lower48_wolves <- wolves %>% 
+  filter(pop %in% c( "MT", "YNP", "GNTP","SNF", "MI"))
+lower48_wolves
+```
+
+
+```{r}
+lower48_wolves %>% 
+  count(pop) %>% 
+  mutate(total_pop=n_distinct(pop))
+```
+Within the lower 48 states, we have 4 distinct wolf populations
 
 7. Use the range of the latitude and longitude to build an appropriate bounding box for your map. 
+```{r}
+summary(lower48_wolves)
+```
+
+```{r}
+lat <- c(44.60,47.75)
+long <- c(-110.99,-86.82)
+bbox2 <- make_bbox(long,lat, f=0.03)
+```
 
 8.  Load a map from `stamen` in a `terrain-lines` projection and display the map.  
+```{r}
+map2 <- get_stadiamap(bbox2, maptype = "stamen_terrain", zoom=7)
+```
+
+```{r}
+ggmap(map2)
+```
 
 9. Build a final map that overlays the recorded observations of wolves in the lower 48 states.  
+```{r}
+ggmap(map2)+
+  geom_point(data=lower48_wolves,aes(long,lat))+
+  labs(title = "Wolf Packs Sampled per Location",
+       x="Longitude",
+       y="Latitude")
+```
 
 10. Use the map from #9 above, but add some aesthetics. Try to `fill` and `color` by population.  
+```{r}
+ggmap(map2)+
+  geom_point(data=lower48_wolves,aes(long,lat,color=pop))+
+  labs(title = "Wolf Packs Sampled per Location",
+       x="Longitude",
+       y="Latitude")
+```
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences. 
